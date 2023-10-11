@@ -24,15 +24,15 @@ jobs:
 
       - run: npm install
 
-      # 테스트 및 커버리지 리포트 생성
       - name: Run tests with coverage
         run: npm run test:cov
 
-      # 실패 시 메시지 출력
       - name: Check test failure
         if: failure()
         run: echo "Test coverage가 70% 미만입니다"
 
-      # Codecov에 커버리지 리포트 업로드
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+      - name: Coveralls GitHub Action
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.COVERALLS_REPO_TOKEN }}
+  
