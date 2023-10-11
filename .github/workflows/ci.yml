@@ -33,6 +33,9 @@ jobs:
         if: failure()
         run: echo "Test coverage가 70% 미만입니다"
 
-      # Codecov에 커버리지 리포트 업로드
-      - name: Upload coverage to Codecov
-        uses: codecov/codecov-action@v2
+      # Coveralls에 커버리지 리포트 업로드
+      - name: Coveralls GitHub Action
+        uses: coverallsapp/github-action@v2
+        with:
+          github-token: ${{ secrets.COVERALLS_REPO_TOKEN }}
+  
