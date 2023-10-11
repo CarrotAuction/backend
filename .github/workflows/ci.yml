@@ -29,7 +29,7 @@ jobs:
 
       - name: Check test failure
         if: failure()
-        run: echo "Test coverage가 70% 미만입니다!"
+        run: echo "Test coverage가 70% 미만입니다"
 
       - name: Coveralls GitHub Action
         uses: coverallsapp/github-action@v2
