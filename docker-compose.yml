@@ -20,6 +20,7 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
+    command: ["/usr/wait-for-it.sh", "db:3306", "--", "npm", "start"]
 
   db:
     container_name: db
