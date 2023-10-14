@@ -8,7 +8,7 @@
   "scripts": {
     "build": "nest build",
     "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
-    "start": "nest start",
+    "start": "nodemon src/main.ts",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
@@ -21,9 +21,12 @@
   },
   "dependencies": {
     "@nestjs/common": "^10.0.0",
+    "@nestjs/config": "^3.1.1",
     "@nestjs/core": "^10.0.0",
     "@nestjs/platform-express": "^10.0.0",
+    "@nestjs/swagger": "^7.1.13",
     "@nestjs/typeorm": "^10.0.0",
+    "class-validator": "^0.14.0",
     "mysql2": "^3.6.1",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.8.1",
@@ -65,8 +68,8 @@
     },
     "collectCoverageFrom": [
       "**/*.(t|j)s",
-      "!**/main.ts", 
-      "!**/app.module.ts" 
+      "!**/main.ts",
+      "!**/app.module.ts"
     ],
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
