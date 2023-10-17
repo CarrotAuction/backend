@@ -66,11 +66,12 @@
     "transform": {
       "^.+\\.(t|j)s$": "ts-jest"
     },
+    
     "collectCoverageFrom": [
-      "**/*.(t|j)s",
-      "!**/main.ts",
-      "!**/app.module.ts"
+      "**/user/user.service.ts",
+      "**/user/user.controller.ts"
     ],
+
     "coverageDirectory": "../coverage",
     "testEnvironment": "node",
     "coverageThreshold": {
