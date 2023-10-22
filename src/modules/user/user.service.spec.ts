@@ -6,8 +6,8 @@ import { UserMapper } from './mapper/user.mapper';
 import { EmailAlreadyExistsException } from '../user/userException/EmailAlreadyExistsException';
 import { NicknameAlreadyExistsException } from './userException/NicknameAlreadyExistsException';
 import { NotFoundUserException } from './userException/NotFoundUserException';
-import { ExceptionsHandler } from '@nestjs/core/exceptions/exceptions-handler';
 import { LoginInvalidPasswordException } from './userException/LoginInvalidPasswordException';
+import { Repository } from 'typeorm';
 
 const mockRepository = () => ({
   findOne: jest.fn(),
@@ -16,14 +16,16 @@ const mockRepository = () => ({
 
 const mockUserMapper = {
   DtoToEntity: jest.fn(),
-  EntityToDto: jest.fn()
 }
 
-type MockRepository<T = any> = Partial<Record<keyof T, jest.Mock>>;
+type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
+
+type MockMapper = Partial<Record<keyof UserMapper, jest.Mock>>;
 
 describe('UserService Unit Test', () => {
   let service: UserService;
-  let userRepository: MockRepository;
+  let userRepository: MockRepository<User>;
+  let userMapper: MockMapper;
 
   const mockDto = {
     email: 'test@test.com',
@@ -54,33 +56,40 @@ describe('UserService Unit Test', () => {
 
     service = module.get<UserService>(UserService);
     userRepository = module.get(getRepositoryToken(User));
+    userMapper = mockUserMapper;
 
-    jest.clearAllMocks();
   });
 
   afterEach(() => {
-    userRepository.findOne.mockRestore();
+    userRepository.findOne.mockClear();
+    userRepository.save.mockClear();
+    userMapper.DtoToEntity.mockClear();
   });
 
 
   it('SUCCESS: 사용자는 회원가입을 한다', async () => {
 
+    const mockUserEntity = Object.assign(new User(), mockDto);
+
     userRepository.findOne
       .mockResolvedValueOnce(null)
       .mockResolvedValueOnce(null);
 
-    const mockUserEntity = Object.assign(new User(), mockDto);
-    mockUserMapper.DtoToEntity.mockReturnValue(mockUserEntity);
 
-    userRepository.save
-      .mockResolvedValue(mockUserEntity);
+    userMapper.DtoToEntity.mockReturnValue(mockUserEntity);
+
+    userRepository.save.mockResolvedValue(mockUserEntity);
 
     const result = await service.registerUser(mockDto);
-
+    
     expect(result).toEqual(mockUserEntity);
+    expect(userRepository.findOne).toHaveBeenCalledWith({where: {email: mockDto.email}});
+    expect(userRepository.findOne).toHaveBeenCalledWith({where: {nickname: mockDto.nickname}});
     expect(userRepository.findOne).toHaveBeenCalledTimes(2);
-    expect(mockUserMapper.DtoToEntity).toHaveBeenCalledWith(mockDto);
+    expect(userRepository.save).toHaveBeenCalledTimes(1);
     expect(userRepository.save).toHaveBeenCalledWith(mockUserEntity);
+    expect(userMapper.DtoToEntity).toHaveBeenCalledTimes(1);
+    expect(userMapper.DtoToEntity).toHaveBeenCalledWith(mockDto);
   });
 
 
