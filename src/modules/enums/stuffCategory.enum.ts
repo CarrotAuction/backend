@@ -1,0 +1,16 @@
+export enum StuffCategory {
+    FASHION = 'FASHION',
+    BEAUTY = 'BEAUTY',
+    BABY = 'BABY',
+    FOOD = 'FOOD',
+    KITCHEN = 'KITCHEN',
+    HOUSEHOLD = 'HOUSEHOLD',
+    HOMEAPP = 'HOMEAPP',
+    SPORT = 'SPORT',
+    CAR = 'CAR',
+    DVD = 'DVD',
+    HOBBY = 'HOBBY',
+    OFFICE = 'OFFICE',
+    ANIMAL = 'ANIMAL',
+    HEALTH = 'HEALTH',
+}
