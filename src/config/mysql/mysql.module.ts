@@ -3,6 +3,9 @@ import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { User } from "../../modules/user/entity/user.entity";
 import { Board } from "../../modules/board/entity/board.entity";
+import { Province } from "../../modules/location/entity/province.entity";
+import { City } from "../../modules/location/entity/city.entity";
+import { Town } from "../../modules/location/entity/town.entity";
 
 @Module({
     imports: [
@@ -16,7 +19,7 @@ import { Board } from "../../modules/board/entity/board.entity";
                 username: configService.get('DB_USER'),
                 password: configService.get('DB_PASSWORD'),
                 database: configService.get('DB_NAME'),
-                entities: [User, Board],
+                entities: [User, Board, Province, City, Town],
                 synchronize: true,
                 logging: true,
             }),
