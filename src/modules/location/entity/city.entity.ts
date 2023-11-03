@@ -15,5 +15,4 @@ export class City {
     @JoinColumn({ name: 'province_id' })
     province_id: Province;
 
-
 }

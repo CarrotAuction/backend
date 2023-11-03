@@ -15,7 +15,11 @@ export class RegisterUserRequestDto {
     @IsNotEmpty()
     email: string;
 
-    @ApiProperty({description: '사용자 거주 지역', example: '서울특별시 강남구'})
+    @ApiProperty({description: '사용자가 거주하는 행정구역', example: '서울특별시'})
     @IsNotEmpty()
-    location: string;
+    province: string;
+
+    @ApiProperty({description: '사용자 거주하는 시/군/구', example: '강남구'})
+    @IsNotEmpty()
+    city: string;
 }
