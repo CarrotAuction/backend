@@ -5,7 +5,6 @@ import { User } from "../../modules/user/entity/user.entity";
 import { Board } from "../../modules/board/entity/board.entity";
 import { Province } from "../../modules/location/entity/province.entity";
 import { City } from "../../modules/location/entity/city.entity";
-import { Town } from "../../modules/location/entity/town.entity";
 
 @Module({
     imports: [
@@ -19,7 +18,7 @@ import { Town } from "../../modules/location/entity/town.entity";
                 username: configService.get('DB_USER'),
                 password: configService.get('DB_PASSWORD'),
                 database: configService.get('DB_NAME'),
-                entities: [User, Board, Province, City, Town],
+                entities: [User, Board, Province, City],
                 synchronize: true,
                 logging: true,
             }),
