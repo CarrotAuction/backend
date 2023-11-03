@@ -45,7 +45,7 @@ export class PublicCity1698811391701 implements MigrationInterface {
         });
     }
 
-    private async insertCityAndProvinceId(queryRunner: QueryRunner, province_city: string) {
+    private async insertCityAndProvinceId(queryRunner: QueryRunner, province_city: string): Promise<void> {
         const provinceStore: {[key: string]: number} = {};
         const [provinceName, cityName] = province_city.split('-');
 
