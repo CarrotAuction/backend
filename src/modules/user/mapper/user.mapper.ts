@@ -2,18 +2,21 @@ import { Injectable } from "@nestjs/common";
 import { RegisterUserRequestDto } from "../dto/user-register-request.dto";
 import { User } from "../entity/user.entity";
 import { UserResponseDto } from "../dto/user-response.dto";
+import { Province } from "../../location/entity/province.entity";
+import { City } from "../../location/entity/city.entity";
 
 @Injectable()
 export class UserMapper {
 
-    DtoToEntity({password, email, nickname, location}: RegisterUserRequestDto): User{
+    DtoToEntity({password, email, nickname}: RegisterUserRequestDto, province: Province, city: City): User{
 
         const user = new User();
 
         user.password = password;
         user.email = email;
         user.nickname = nickname;
-        user.location = location;
+        user.city = city;
+        user.province = province;
 
         return user;
     }
@@ -24,7 +27,8 @@ export class UserMapper {
         return {
             email: user.email,
             nickname: user.nickname,
-            location: user.location,
+            province: user.province.name,
+            city: user.city.name,
         };
     }
 }
