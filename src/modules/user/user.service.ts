@@ -38,7 +38,11 @@ export class UserService {
             throw new ProvinceInvalidException();
         }
         // 시/군/구 유효성체크
-        const city = await this.cityRepository.findOne({where: {name: registerUserRequestDto.city}});
+        const city = await this.cityRepository.createQueryBuilder("city")
+                        .leftJoin("province", "province", "city.province_id = province.id")
+                        .where("city.name = :cityName", {cityName: registerUserRequestDto.city})
+                        .andWhere("province.id = :provinceId", {provinceId: province.id})
+                        .getOne()
         if(!city) {
             throw new CityInvalidException();
         }
