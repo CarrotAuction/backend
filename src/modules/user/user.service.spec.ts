@@ -41,9 +41,16 @@ describe('UserService Unit Test', () => {
   const mockUserEntity = Object.assign(new User(), mockDto);
 
   const mockLoginDto = {
-    nickname: 'test-nickname',
+    email: 'test@eamil.com',
     password: 'test-correctPassword',
   }
+
+  const mockUser = {
+    ...new User(),
+    email: mockLoginDto.email,
+    password: mockLoginDto.password,
+    nickname: '테스트',
+  };
 
   const mockProvince = { id: 1, name: mockDto.province };
   const mockCity = { id: 1, name: mockDto.city, province_id: mockProvince.id };
@@ -143,16 +150,12 @@ describe('UserService Unit Test', () => {
 
   it('SUCCESS: 사용자가 로그인을 한다', async () => {
 
-    userRepository.findOne
-      .mockResolvedValue({ 
-        ...new User(), 
-        nickname: mockLoginDto.nickname,
-        password: mockLoginDto.password
-      });
+    userRepository.findOne.mockResolvedValue(mockUser);
+    
 
     const result = await service.loginUser(mockLoginDto);
     
-    expect(result).toBe(`${mockLoginDto.nickname}님 안녕하세요!`);
+    expect(result).toBe(`${mockUser.nickname}님 안녕하세요!`);
   });
 
   it('ERROR: 회원가입 시 없는 행정구역을 선택하면 ProvinceInvalidException을 반환', async () => {
