@@ -70,15 +70,17 @@ export class UserService {
     // 로그인
     async loginUser(loginUserDto: LoginUserDto): Promise<String> {
         // 유저 유효성 체크
-        const user = await this.userRepository.findOne({where: {nickname: loginUserDto.nickname}});
+        const user = await this.userRepository.findOne({where: {email: loginUserDto.email}});
         if(!user) {
             throw new NotFoundUserException();
         }
         // 로그인 체크
-        if(user.password !== loginUserDto.password){
-            throw new LoginInvalidPasswordException();
+        const {password} = loginUserDto;
+        if(user && (await bcrypt.compare(password, user.password))){
+            return `${user.nickname}님 안녕하세요!`;
+        } else{
+        throw new LoginInvalidPasswordException();
         }
-        return `${user.nickname}님 안녕하세요!`;
     }
 }
 
