@@ -34,7 +34,7 @@ export class UserController {
         @Body() loginUserDto: LoginUserDto,
         @Res() res: Response,
     ): Promise<void>{
-        const message = await this.userService.loginUser(loginUserDto);
-        res.status(HttpStatus.OK).send(message);
+        const response = await this.userService.loginUser(loginUserDto);
+        res.status(HttpStatus.OK).send(response);
     }
 }

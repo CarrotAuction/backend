@@ -6,4 +6,5 @@ export class CreateBoardResponseDto {
     stuffContent: string;
     stuffPrice: number;
     stuffCategory: StuffCategory;
+    creatorId: number;
 }

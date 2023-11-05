@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { BoardMapper } from './mapper/board.mapper';
 import { Board } from './entity/board.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
+import { User } from '../user/entity/user.entity';
 
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>; 
 type MockMapper = Partial<Record<keyof BoardMapper, jest.Mock>>;
@@ -11,6 +12,7 @@ type MockMapper = Partial<Record<keyof BoardMapper, jest.Mock>>;
 describe('BoardService', () => {
   let service: BoardService;
   let boardRepository: MockRepository<Board>;
+  let userRepository: MockRepository<User>;
   let boardMapper: MockMapper;
 
   const mockRepository = () => ({
@@ -27,6 +29,10 @@ describe('BoardService', () => {
         BoardService,
         {
           provide: getRepositoryToken(Board),
+          useValue: mockRepository(),
+        },
+        {
+          provide: getRepositoryToken(User),
           useValue: mockRepository(),
         },
         {

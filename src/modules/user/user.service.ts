@@ -13,6 +13,8 @@ import { Province } from '../location/entity/province.entity';
 import { City } from '../location/entity/city.entity';
 import { ProvinceInvalidException } from './userException/ProvinceInvalidException';
 import { CityInvalidException } from './userException/CityInvalidException';
+import * as bcrypt from 'bcrypt';
+import { UserLoginResponseDto } from './dto/user-login-response.dto';
 
 @Injectable()
 export class UserService {
@@ -56,23 +58,34 @@ export class UserService {
         if(isNicknameExist) {
             throw new NicknameAlreadyExistsException();
         }
+        // 비밀번호 암호화
+        const {password} = registerUserRequestDto;
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(password, salt);
+        registerUserRequestDto.password = hashedPassword;
 
         const newUserEntity = this.userMapper.DtoToEntity(registerUserRequestDto, province, city);
         return await this.userRepository.save(newUserEntity);
     }
     
     // 로그인
-    async loginUser(loginUserDto: LoginUserDto): Promise<String> {
+    async loginUser(loginUserDto: LoginUserDto): Promise<UserLoginResponseDto> {
         // 유저 유효성 체크
-        const user = await this.userRepository.findOne({where: {nickname: loginUserDto.nickname}});
+        const user = await this.userRepository.findOne({where: {email: loginUserDto.email}});
         if(!user) {
             throw new NotFoundUserException();
         }
         // 로그인 체크
-        if(user.password !== loginUserDto.password){
-            throw new LoginInvalidPasswordException();
+        const {password} = loginUserDto;
+        if(user && (await bcrypt.compare(password, user.password))){
+            const response: UserLoginResponseDto = {
+                message: `${user.nickname}님 안녕하세요!`,
+                userId: user.id,
+            };
+            return response;
+        } else{
+        throw new LoginInvalidPasswordException();
         }
-        return `${user.nickname}님 안녕하세요!`;
     }
 }
 
