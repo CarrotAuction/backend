@@ -13,6 +13,7 @@ import { Province } from '../location/entity/province.entity';
 import { City } from '../location/entity/city.entity';
 import { ProvinceInvalidException } from './userException/ProvinceInvalidException';
 import { CityInvalidException } from './userException/CityInvalidException';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
@@ -56,6 +57,11 @@ export class UserService {
         if(isNicknameExist) {
             throw new NicknameAlreadyExistsException();
         }
+        // 비밀번호 암호화
+        const {password} = registerUserRequestDto;
+        const salt = await bcrypt.genSalt();
+        const hashedPassword = await bcrypt.hash(password, salt);
+        registerUserRequestDto.password = hashedPassword;
 
         const newUserEntity = this.userMapper.DtoToEntity(registerUserRequestDto, province, city);
         return await this.userRepository.save(newUserEntity);
