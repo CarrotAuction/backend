@@ -14,6 +14,7 @@ import { City } from '../location/entity/city.entity';
 import { ProvinceInvalidException } from './userException/ProvinceInvalidException';
 import { CityInvalidException } from './userException/CityInvalidException';
 import * as bcrypt from 'bcrypt';
+import { UserLoginResponseDto } from './dto/user-login-response.dto';
 
 @Injectable()
 export class UserService {
@@ -68,7 +69,7 @@ export class UserService {
     }
     
     // 로그인
-    async loginUser(loginUserDto: LoginUserDto): Promise<String> {
+    async loginUser(loginUserDto: LoginUserDto): Promise<UserLoginResponseDto> {
         // 유저 유효성 체크
         const user = await this.userRepository.findOne({where: {email: loginUserDto.email}});
         if(!user) {
@@ -77,7 +78,11 @@ export class UserService {
         // 로그인 체크
         const {password} = loginUserDto;
         if(user && (await bcrypt.compare(password, user.password))){
-            return `${user.nickname}님 안녕하세요!`;
+            const response: UserLoginResponseDto = {
+                message: `${user.nickname}님 안녕하세요!`,
+                userId: user.id,
+            };
+            return response;
         } else{
         throw new LoginInvalidPasswordException();
         }
