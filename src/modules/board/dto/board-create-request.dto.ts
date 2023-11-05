@@ -14,4 +14,7 @@ export class CreateBoardRequestDto {
 
     @IsEnum(StuffCategory)
     stuffCategory: StuffCategory;
+
+    @IsNumber()
+    creatorId: number;
 }
