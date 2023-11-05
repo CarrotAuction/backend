@@ -45,6 +45,9 @@ describe('UserService Unit Test', () => {
     password: 'test-correctPassword',
   }
 
+  const bcrypt = require('bcrypt');
+  bcrypt.compare = jest.fn().mockResolvedValue(true);
+
   const mockUser = {
     ...new User(),
     email: mockLoginDto.email,
@@ -155,7 +158,7 @@ describe('UserService Unit Test', () => {
 
     const result = await service.loginUser(mockLoginDto);
     
-    expect(result).toBe(`${mockUser.nickname}님 안녕하세요!`);
+    expect(result.message).toBe(`${mockUser.nickname}님 안녕하세요!`);
   });
 
   it('ERROR: 회원가입 시 없는 행정구역을 선택하면 ProvinceInvalidException을 반환', async () => {
@@ -238,6 +241,8 @@ describe('UserService Unit Test', () => {
         ...new User(),
         password: 'test-wrongPassword'
       });
+
+      bcrypt.compare.mockResolvedValue(false);
       
     await expect(service.loginUser(mockLoginDto))
       .rejects.toThrow(LoginInvalidPasswordException);
