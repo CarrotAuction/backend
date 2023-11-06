@@ -35,9 +35,9 @@ export class BoardService {
 
     async getBoardDetail(boardId: number): Promise<Board>{
         return await this.boardRepository.createQueryBuilder('board')
-                .leftJoinAndSelect('board.creator', 'user')
-                .leftJoinAndSelect('user.province', 'province')
-                .leftJoinAndSelect('user.city', 'city')
+                .leftJoin('board.creator', 'user')
+                .leftJoin('user.province', 'province')
+                .leftJoin('user.city', 'city')
                 .select([
                     'board.id',
                     'board.stuffName',
@@ -50,6 +50,27 @@ export class BoardService {
                 ])
                 .where('board.id =:id', {id: boardId})
                 .getOne();
+    }
+
+    async getAllBoard(): Promise<Board[]>{
+        return await this.boardRepository.createQueryBuilder('board')
+                .leftJoin('board.creator', 'user')
+                .leftJoin('user.province', 'province')
+                .leftJoin('user.city', 'city')
+                .select([
+                    'board.id',
+                    'board.stuffName',
+                    'board.stuffContent',
+                    'board.stuffPrice',
+                    'board.stuffCategory',
+                    'board.createAt',
+                    'user.id',
+                    'province.name',
+                    'city.name'
+                ])
+                .orderBy('board.createAt', 'DESC')
+                .addOrderBy('board.id', 'ASC')
+                .getMany();         
     }
 
 

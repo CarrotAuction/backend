@@ -35,6 +35,13 @@ export class BoardController {
         res.status(HttpStatus.OK).json(response);
     }
 
+    @ApiOperation({summary: '사용자는 전체 게시글을 조회한다.'})
+    @Get()
+    async getAllBoard(@Res() res: Response): Promise<void>{
+        const response = await this.boardService.getAllBoard();
+        res.status(HttpStatus.OK).json(response);
+    }
+
 
 
 
