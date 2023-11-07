@@ -55,8 +55,8 @@ export class BoardService {
 
     async getAllBoard(boardPaginationRequestDto: BoardPaginationReqestDto): Promise<[Board[], number]>{
 
-        const {limit, offset} = boardPaginationRequestDto;
-        return await this.boardRepository.createQueryBuilder('board')
+        const {titleSearch, provinceName, cityName, stuffCategory, limit, offset} = boardPaginationRequestDto;
+        const query = this.boardRepository.createQueryBuilder('board')
                 .leftJoin('board.creator', 'user')
                 .leftJoin('user.province', 'province')
                 .leftJoin('user.city', 'city')
@@ -71,12 +71,30 @@ export class BoardService {
                     'province.name',
                     'city.name'
                 ])
-                .orderBy('board.createAt', 'DESC')
-                .addOrderBy('board.id', 'ASC')
-                .offset(offset)
-                .limit(limit)
-                .getManyAndCount();      
-    }
+                .where('board.deleteAt IS NULL');
 
+                if(titleSearch) {
+                    query.andWhere('board.stuffName LIKE :search', { search: `%${titleSearch}%` });
+                }
 
+                if(provinceName) {
+                    query.andWhere('province.name = :provinceName', {provinceName});
+                }
+
+                if(cityName) {
+                    query.andWhere('city.name = :cityName', {cityName});
+                }
+
+                if(stuffCategory) {
+                    query.andWhere('board.stuffCategory = :stuffCategory', {stuffCategory});
+                }
+
+                query.orderBy('board.createAt', 'DESC')
+                    .addOrderBy('board.id', 'ASC')
+                    .offset(offset)
+                    .limit(limit)
+
+            return await query.getManyAndCount();
+            
+            }
 }
