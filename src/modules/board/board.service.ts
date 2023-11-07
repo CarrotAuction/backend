@@ -6,7 +6,7 @@ import { Board } from './entity/board.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user/entity/user.entity';
 import { NotFoundUserException } from '../user/userException/NotFoundUserException';
-import { StuffCategory } from '../enums/stuffCategory.enum';
+import { BoardPaginationReqestDto } from './dto/board-pagination-request.dto';
 
 @Injectable()
 export class BoardService {
@@ -21,6 +21,7 @@ export class BoardService {
         private readonly boardMapper: BoardMapper
     ) {}
     
+
     async createBoard(createBoardRequestDto: CreateBoardRequestDto): Promise<Board> {
 
         const creator = await this.userRepository.findOne({where: {id: createBoardRequestDto.creatorId}});
@@ -52,7 +53,9 @@ export class BoardService {
                 .getOne();
     }
 
-    async getAllBoard(): Promise<Board[]>{
+    async getAllBoard(boardPaginationRequestDto: BoardPaginationReqestDto): Promise<[Board[], number]>{
+
+        const {limit, offset} = boardPaginationRequestDto;
         return await this.boardRepository.createQueryBuilder('board')
                 .leftJoin('board.creator', 'user')
                 .leftJoin('user.province', 'province')
@@ -70,7 +73,9 @@ export class BoardService {
                 ])
                 .orderBy('board.createAt', 'DESC')
                 .addOrderBy('board.id', 'ASC')
-                .getMany();         
+                .offset(offset)
+                .limit(limit)
+                .getManyAndCount();      
     }
 
 
