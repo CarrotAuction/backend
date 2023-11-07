@@ -55,7 +55,7 @@ export class BoardRepository extends Repository<Board> {
                 .where('board.deleteAt IS NULL');
 
                 if(titleSearch) {
-                    query.andWhere('board.stuffName LIKE :search', { search: `%${titleSearch}%` });
+                    query.andWhere('board.stuffName LIKE :search', { search: `${titleSearch}%` });
                 }
 
                 if(provinceName) {
