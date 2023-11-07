@@ -10,6 +10,11 @@ export class BoardRepository extends Repository<Board> {
         super(Board, dataSource.createEntityManager());
     }
 
+    async findBoard(boardId: number): Promise<Board> {
+        return await this.findOne({where: {id: boardId}});
+    }
+
+    
     async findBoardById(boardId: number): Promise<Board> { 
         return await this.createQueryBuilder('board')
             .leftJoin('board.creator', 'user')

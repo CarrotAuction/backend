@@ -8,6 +8,7 @@ import { User } from '../user/entity/user.entity';
 import { NotFoundUserException } from '../user/userException/NotFoundUserException';
 import { BoardPaginationReqestDto } from './dto/board-pagination-request.dto';
 import { BoardRepository } from './repository/boardRepository';
+import { NotFoundBoardException } from './boardException/NotFoundBoardException';
 
 @Injectable()
 export class BoardService {
@@ -21,6 +22,7 @@ export class BoardService {
         private readonly boardMapper: BoardMapper
     ) {}
 
+
     async createBoard(createBoardRequestDto: CreateBoardRequestDto): Promise<Board> {
         const creator = await this.userRepository.findOne({where: {id: createBoardRequestDto.creatorId}});
         if(!creator){
@@ -31,12 +33,16 @@ export class BoardService {
     }
 
 
-    async getBoardDetail(boardId: number): Promise<Board>{
+    async getBoardDetail(boardId: number): Promise<Board> {
+        const Board = await this.boardRepository.findBoard(boardId);
+        if(!Board){
+            throw new NotFoundBoardException();
+        }
         return await this.boardRepository.findBoardById(boardId);
     }
 
 
-    async getAllBoard(boardPaginationRequestDto: BoardPaginationReqestDto): Promise<[Board[], number]>{
+    async getAllBoard(boardPaginationRequestDto: BoardPaginationReqestDto): Promise<[Board[], number]> {
         return await this.boardRepository.findAllBoard(boardPaginationRequestDto);        
     }
 }
