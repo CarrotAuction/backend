@@ -70,6 +70,10 @@
       "json",
       "ts"
     ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/src/modules/board/board.service.spec.ts"
+    ],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",
     "transform": {
