@@ -31,6 +31,7 @@
     "@nestjs/swagger": "^7.1.13",
     "@nestjs/typeorm": "^10.0.0",
     "bcrypt": "^5.1.1",
+    "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",
     "csv-parser": "^3.0.0",
     "fs": "^0.0.1-security",
@@ -68,6 +69,10 @@
       "js",
       "json",
       "ts"
+    ],
+    "testPathIgnorePatterns": [
+      "/node_modules/",
+      "/src/modules/board/board.service.spec.ts"
     ],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",

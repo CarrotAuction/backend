@@ -7,4 +7,7 @@ export enum ErrorCode {
     USER_INVALID_PASSWROD = 'U004',
     USER_INVALID_PROVINCE = 'U005',
     USER_INVALID_CITY = 'U006',
+
+    //Board
+    BOARD_NOT_FOUND = 'B001'
 }
