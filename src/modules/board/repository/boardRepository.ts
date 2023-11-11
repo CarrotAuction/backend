@@ -20,6 +20,8 @@ export class BoardRepository extends Repository<Board> {
             .leftJoin('board.creator', 'user')
             .leftJoin('user.province', 'province')
             .leftJoin('user.city', 'city')
+            .leftJoinAndSelect('board.comments', 'comment')
+            .leftJoin('comment.creator', 'comment_creator')
             .select([
                 'board.id',
                 'board.stuffName',
@@ -28,7 +30,11 @@ export class BoardRepository extends Repository<Board> {
                 'board.stuffCategory',
                 'user.nickname',
                 'province.name',
-                'city.name'
+                'city.name',
+                'comment.openChatUrl',
+                'comment.price',
+                'comment.createAt',
+                'comment_creator.nickname'
             ])
             .where('board.id =:id', {id: boardId})
             .getOne();
