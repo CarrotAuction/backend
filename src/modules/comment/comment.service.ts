@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { BoardRepository } from '../board/repository/boardRepository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../user/entity/user.entity';
@@ -8,6 +7,7 @@ import { NotFoundUserException } from '../user/userException/NotFoundUserExcepti
 import { NotFoundBoardException } from '../board/boardException/NotFoundBoardException';
 import { CommentMapper } from './mapper/comment.mapper';
 import { Comment } from './entity/comment.entity';
+import { Board } from '../board/entity/board.entity';
 
 @Injectable()
 export class CommentService {
@@ -16,7 +16,8 @@ export class CommentService {
         @InjectRepository(Comment)
         private readonly commentRepository: Repository<Comment>,
 
-        private readonly boardRepository: BoardRepository,
+        @InjectRepository(Board)
+        private readonly boardRepository: Repository<Board>,
 
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
@@ -33,7 +34,6 @@ export class CommentService {
         if(!board){
             throw new NotFoundBoardException();
         }
-
         const newCommentEntity = this.commentMapper.dtoToEntity(createCommentRequestDto, creator, board);
         return await this.commentRepository.save(newCommentEntity);
 

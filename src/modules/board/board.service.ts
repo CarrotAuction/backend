@@ -6,18 +6,22 @@ import { Board } from './entity/board.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user/entity/user.entity';
 import { NotFoundUserException } from '../user/userException/NotFoundUserException';
-import { BoardPaginationReqestDto } from './dto/board-pagination-request.dto';
-import { BoardRepository } from './repository/boardRepository';
 import { NotFoundBoardException } from './boardException/NotFoundBoardException';
+import { Comment } from '../comment/entity/comment.entity';
+import { BoardPaginationRequestDto } from './dto/board-pagination-request.dto';
 
 @Injectable()
 export class BoardService {
 
     constructor(
-        private readonly boardRepository: BoardRepository,
+        @InjectRepository(Board)
+        private readonly boardRepository: Repository<Board>,
 
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
+
+        @InjectRepository(Comment)
+        private readonly commentRepository: Repository<Comment>,
 
         private readonly boardMapper: BoardMapper
     ) {}
@@ -33,16 +37,91 @@ export class BoardService {
     }
 
 
-    async getBoardDetail(boardId: number): Promise<Board> {
-        const Board = await this.boardRepository.findBoard(boardId);
-        if(!Board){
+    async getBoardDetail(boardId: number): Promise<{ board: Board; comments: Comment[]; totalComments: number }> {
+        const board = await this.boardRepository.createQueryBuilder('board')
+            .leftJoin('board.creator', 'user')
+            .leftJoin('user.province', 'province')
+            .leftJoin('user.city', 'city')
+            .where('board.id = :id', { id: boardId })
+            .select([
+                'board.id',
+                'board.stuffName',
+                'board.stuffContent',
+                'board.stuffPrice',
+                'board.stuffCategory',
+                'board.createAt',
+                'user.nickname',
+                'province.name',
+                'city.name',
+            ])
+            .getOne();
+    
+        if(!board) {
             throw new NotFoundBoardException();
         }
-        return await this.boardRepository.findBoardById(boardId);
+        const [comments, totalComments] = await this.commentRepository.createQueryBuilder('comment')
+            .leftJoin('comment.creator', 'user')
+            .select([
+                'comment.id',
+                'comment.price',
+                'comment.openChatUrl',
+                'comment.createAt',
+                'user.nickname'
+            ])
+            .where('comment.board.id = :id', { id: boardId })
+            .orderBy('comment.createAt', 'DESC')
+            .limit(6)
+            .getManyAndCount();
+    
+        return {
+            board, 
+            comments, 
+            totalComments, 
+        };
     }
 
 
-    async getAllBoard(boardPaginationRequestDto: BoardPaginationReqestDto): Promise<[Board[], number]> {
-        return await this.boardRepository.findAllBoard(boardPaginationRequestDto);        
-    }
+    async getAllBoard(boardPaginationRequestDto: BoardPaginationRequestDto): Promise<[Board[], number]> {
+        const {titleSearch, provinceName, cityName, stuffCategory, limit, offset} = boardPaginationRequestDto;
+        const query = this.boardRepository.createQueryBuilder('board')
+        .leftJoin('board.creator', 'user')
+        .leftJoin('user.province', 'province')
+        .leftJoin('user.city', 'city')
+        .select([
+            'board.id',
+            'board.stuffName',
+            'board.stuffContent',
+            'board.stuffPrice',
+            'board.stuffCategory',
+            'board.createAt',
+            'user.id',
+            'province.name',
+            'city.name'
+        ])
+        .where('board.deleteAt IS NULL');
+
+        if(titleSearch) {
+            query.andWhere('board.stuffName LIKE :search', { search: `${titleSearch}%` });
+        }
+
+        if(provinceName) {
+            query.andWhere('province.name = :provinceName', {provinceName});
+        }
+
+        if(cityName) {
+            query.andWhere('city.name = :cityName', {cityName});
+        }
+
+        if(stuffCategory) {
+            query.andWhere('board.stuffCategory = :stuffCategory', {stuffCategory});
+        }
+
+        query.orderBy('board.createAt', 'DESC')
+            .addOrderBy('board.id', 'ASC')
+            .offset(offset)
+            .limit(limit)
+
+    return await query.getManyAndCount();
+    
+    }     
 }
