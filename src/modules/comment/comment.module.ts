@@ -6,11 +6,10 @@ import { User } from '../user/entity/user.entity';
 import { Board } from '../board/entity/board.entity';
 import { CommentMapper } from './mapper/comment.mapper';
 import { Comment } from './entity/comment.entity';
-import { BoardRepository } from '../board/repository/boardRepository';
 
 @Module({
   imports:[TypeOrmModule.forFeature([Comment, Board, User])],
-  providers: [CommentService, CommentMapper, BoardRepository],
+  providers: [CommentService, CommentMapper],
   controllers: [CommentController]
 })
 export class CommentModule {}
