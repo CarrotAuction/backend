@@ -8,7 +8,7 @@ services:
       context: .
       dockerfile: Dockerfile
     ports:
-      - "8080:8080"
+      - '8080:8080'
     depends_on:
       - db
     environment:
@@ -20,7 +20,7 @@ services:
     volumes:
       - .:/usr/src/app
       - /usr/src/app/node_modules
-    command: ["/usr/wait-for-it.sh", "db:3306", "--", "npm", "start"]
+    command: ['/usr/wait-for-it.sh', 'db:3306', '--', 'npm', 'start']
 
   db:
     container_name: db
