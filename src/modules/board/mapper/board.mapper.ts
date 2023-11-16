@@ -2,7 +2,7 @@ import { Injectable } from "@nestjs/common";
 import { CreateBoardRequestDto } from "../dto/board-create-request.dto";
 import { Board } from "../entity/board.entity";
 import { CreateBoardResponseDto } from "../dto/board-create-response.dto";
-import { User } from "src/modules/user/entity/user.entity";
+import { User } from "../../user/entity/user.entity";
 
 @Injectable()
 export class BoardMapper {

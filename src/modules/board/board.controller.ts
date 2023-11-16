@@ -4,10 +4,10 @@ import { BoardService } from './board.service';
 import { CreateBoardRequestDto } from './dto/board-create-request.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BoardMapper } from './mapper/board.mapper';
-import { BoardPaginationReqestDto } from './dto/board-pagination-request.dto';
+import { BoardPaginationRequestDto } from './dto/board-pagination-request.dto';
 
 @ApiTags('board')
-@Controller('board')
+@Controller('boards')
 export class BoardController {
     
     constructor(
@@ -29,10 +29,10 @@ export class BoardController {
     @ApiOperation({summary: '사용자는 전체 게시글을 조회한다.'})
     @Get()
     async getAllBoard(
-        @Query() boardPaginationReqestDto: BoardPaginationReqestDto,
+        @Query() boardPaginationRequestDto: BoardPaginationRequestDto,
         @Res() res: Response
     ): Promise<void>{
-        const response = await this.boardService.getAllBoard(boardPaginationReqestDto);
+        const response = await this.boardService.getAllBoard(boardPaginationRequestDto);
         res.status(HttpStatus.OK).json(response);
     }
 

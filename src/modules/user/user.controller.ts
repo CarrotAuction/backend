@@ -9,7 +9,7 @@ import { UserResponseDto } from './dto/user-response.dto';
 import { LoginUserDto } from './dto/user-login.dto';
 
 @ApiTags('user')
-@Controller('user')
+@Controller('users')
 export class UserController {
 
     constructor(

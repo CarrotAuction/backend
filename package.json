@@ -72,7 +72,8 @@
     ],
     "testPathIgnorePatterns": [
       "/node_modules/",
-      "/src/modules/board/board.service.spec.ts"
+      "/src/modules/board/board.service.spec.ts",
+      "/src/modules/comment/comment.service.spec.ts"
     ],
     "rootDir": "src",
     "testRegex": ".*\\.spec\\.ts$",

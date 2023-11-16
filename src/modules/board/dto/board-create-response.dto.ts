@@ -1,4 +1,4 @@
-import { StuffCategory } from "../../enums/stuffCategory.enum";
+import { StuffCategory } from "../../comment/enums/stuffCategory.enum";
 
 export class CreateBoardResponseDto {
 
