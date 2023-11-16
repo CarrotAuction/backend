@@ -7,7 +7,7 @@ import { BoardMapper } from './mapper/board.mapper';
 import { BoardPaginationRequestDto } from './dto/board-pagination-request.dto';
 
 @ApiTags('board')
-@Controller('board')
+@Controller('boards')
 export class BoardController {
     
     constructor(
