@@ -16,7 +16,7 @@ export class User extends BaseEntity{
     nickname: string;
 
     @Column()
-    email: string;
+    accountID: string;
 
     @ManyToOne(type => Province)
     @JoinColumn({name: 'province_id'})

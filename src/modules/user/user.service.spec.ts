@@ -3,7 +3,6 @@ import { UserService } from './user.service';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './entity/user.entity';
 import { UserMapper } from './mapper/user.mapper';
-import { EmailAlreadyExistsException } from '../user/userException/EmailAlreadyExistsException';
 import { NicknameAlreadyExistsException } from './userException/NicknameAlreadyExistsException';
 import { NotFoundUserException } from './userException/NotFoundUserException';
 import { LoginInvalidPasswordException } from './userException/LoginInvalidPasswordException';
@@ -12,6 +11,7 @@ import { City } from '../location/entity/city.entity';
 import { Province } from '../location/entity/province.entity';
 import { ProvinceInvalidException } from './userException/ProvinceInvalidException';
 import { CityInvalidException } from './userException/CityInvalidException';
+import { AccountIdAlreadyExistsException } from './userException/AccountIdAlreadyExistsException';
 
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>;
 type MockMapper = Partial<Record<keyof UserMapper, jest.Mock>>;
@@ -24,7 +24,7 @@ describe('UserService Unit Test', () => {
   let userMapper: MockMapper;
 
   const mockDto = {
-    email: 'test@test.com',
+    accountID: 'yeye2me',
     password: '12345',
     nickname: '사용자',
     province: '서울특별시',
@@ -41,7 +41,7 @@ describe('UserService Unit Test', () => {
   const mockUserEntity = Object.assign(new User(), mockDto);
 
   const mockLoginDto = {
-    email: 'test@eamil.com',
+    accountID: 'yeye2me',
     password: 'test-correctPassword',
   }
 
@@ -50,7 +50,7 @@ describe('UserService Unit Test', () => {
 
   const mockUser = {
     ...new User(),
-    email: mockLoginDto.email,
+    accountID: mockLoginDto.accountID,
     password: mockLoginDto.password,
     nickname: '테스트',
   };
@@ -134,7 +134,7 @@ describe('UserService Unit Test', () => {
     expect(cityRepository.createQueryBuilder().getOne).toHaveBeenCalled();
 
     // userRepository 실행 순서 검증
-    expect(userRepository.findOne).toHaveBeenNthCalledWith(1, { where: { email: mockDto.email } });
+    expect(userRepository.findOne).toHaveBeenNthCalledWith(1, { where: { accountID: mockDto.accountID } });
     expect(userRepository.findOne).toHaveBeenNthCalledWith(2, { where: { nickname: mockDto.nickname } });
 
     // userRepository 호출 횟수 검증
@@ -186,7 +186,7 @@ describe('UserService Unit Test', () => {
   });
 
 
-  it('ERROR: 회원가입 시 중복된 이메일이 있으면 EmailAlreadyExistsException을 반환', async () => {
+  it('ERROR: 회원가입 시 중복된 이메일이 있으면 AccountIdAlreadyExistsException을 반환', async () => {
 
 
     provinceRepository.findOne.mockResolvedValueOnce(mockProvince);
@@ -195,13 +195,13 @@ describe('UserService Unit Test', () => {
     userRepository.findOne
       .mockResolvedValue({
         ...new User(),
-        email: mockDto.email
+        accountID: mockDto.accountID
       });
 
     await expect(service.registerUser(mockDto))
-      .rejects.toThrow(EmailAlreadyExistsException);
+      .rejects.toThrow(AccountIdAlreadyExistsException);
 
-    expect(userRepository.findOne).toHaveBeenCalledWith({where: {email: mockDto.email}}); 
+    expect(userRepository.findOne).toHaveBeenCalledWith({where: {accountID: mockDto.accountID}}); 
   });
 
 

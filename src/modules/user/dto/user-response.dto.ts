@@ -1,7 +1,7 @@
 export class UserResponseDto {
 
     nickname: string;
-    email: string;
+    accountID: string;
     province: string;
     city: string;
 }

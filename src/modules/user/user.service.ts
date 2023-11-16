@@ -4,7 +4,7 @@ import { User } from './entity/user.entity';
 import { Repository } from 'typeorm';
 import { RegisterUserRequestDto } from './dto/user-register-request.dto';
 import { UserMapper } from './mapper/user.mapper';
-import { EmailAlreadyExistsException } from './userException/EmailAlreadyExistsException';
+import { AccountIdAlreadyExistsException } from './userException/AccountIdAlreadyExistsException';
 import { NicknameAlreadyExistsException } from './userException/NicknameAlreadyExistsException';
 import { LoginUserDto } from './dto/user-login.dto';
 import { NotFoundUserException } from './userException/NotFoundUserException';
@@ -49,9 +49,9 @@ export class UserService {
             throw new CityInvalidException();
         }
         // 이메일 유효성체크
-        const isEmailExist = await this.userRepository.findOne({where: {email:registerUserRequestDto.email}});
-        if(isEmailExist) {
-          throw new EmailAlreadyExistsException();
+        const isAccountIDExist = await this.userRepository.findOne({where: {accountID:registerUserRequestDto.accountID}});
+        if(isAccountIDExist) {
+          throw new AccountIdAlreadyExistsException();
         }
         // 닉네임 유효성체크
         const isNicknameExist = await this.userRepository.findOne({where: {nickname: registerUserRequestDto.nickname}});
@@ -71,7 +71,7 @@ export class UserService {
     // 로그인
     async loginUser(loginUserDto: LoginUserDto): Promise<UserLoginResponseDto> {
         // 유저 유효성 체크
-        const user = await this.userRepository.findOne({where: {email: loginUserDto.email}});
+        const user = await this.userRepository.findOne({where: {accountID: loginUserDto.accountID}});
         if(!user) {
             throw new NotFoundUserException();
         }

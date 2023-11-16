@@ -8,12 +8,12 @@ import { City } from "../../location/entity/city.entity";
 @Injectable()
 export class UserMapper {
 
-    DtoToEntity({password, email, nickname}: RegisterUserRequestDto, province: Province, city: City): User{
+    DtoToEntity({password, accountID, nickname}: RegisterUserRequestDto, province: Province, city: City): User{
 
         const user = new User();
 
         user.password = password;
-        user.email = email;
+        user.accountID = accountID;
         user.nickname = nickname;
         user.city = city;
         user.province = province;
@@ -25,7 +25,7 @@ export class UserMapper {
     EntityToDto(user: User): UserResponseDto {
         
         return {
-            email: user.email,
+            accountID: user.accountID,
             nickname: user.nickname,
             province: user.province.name,
             city: user.city.name,

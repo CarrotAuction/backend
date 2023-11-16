@@ -11,9 +11,9 @@ export class RegisterUserRequestDto {
     @IsNotEmpty()
     nickname: string;
 
-    @ApiProperty({description: '사용자 이메일', example: 'asdfg@gmail.com'})
+    @ApiProperty({description: '사용자 아이디', example: 'yeye2me'})
     @IsNotEmpty()
-    email: string;
+    accountID: string;
 
     @ApiProperty({description: '사용자가 거주하는 행정구역', example: '서울특별시'})
     @IsNotEmpty()
