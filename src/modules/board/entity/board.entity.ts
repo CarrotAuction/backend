@@ -1,6 +1,6 @@
 import { User } from "../../user/entity/user.entity";
 import { BaseEntity } from "../../../global/common/base.entitiy";
-import { StuffCategory } from "../../comment/enums/stuffCategory.enum";
+import { StuffCategory } from "../enums/stuffCategory.enum";
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 import { Comment } from "../../comment/entity/comment.entity";
 

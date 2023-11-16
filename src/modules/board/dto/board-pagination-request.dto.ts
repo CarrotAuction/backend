@@ -1,6 +1,6 @@
 import { Type } from "class-transformer";
 import { IsEnum, IsInt, IsOptional, IsString} from "class-validator";
-import { StuffCategory } from "../../comment/enums/stuffCategory.enum";
+import { StuffCategory } from "../enums/stuffCategory.enum";
 
 export class BoardPaginationRequestDto{
 
