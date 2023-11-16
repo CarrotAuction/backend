@@ -37,7 +37,7 @@ export class BoardService {
     }
 
 
-    async getBoardDetail(boardId: number): Promise<{ board: Board; comments: Comment[]; totalComments: number }> {
+    async getBoardDetail(boardId: number): Promise<{board: Board; comments: Comment[]; totalComments: number}> {
         const board = await this.boardRepository.createQueryBuilder('board')
             .leftJoin('board.creator', 'user')
             .leftJoin('user.province', 'province')
@@ -81,7 +81,7 @@ export class BoardService {
     }
 
 
-    async getAllBoard(boardPaginationRequestDto: BoardPaginationRequestDto): Promise<[Board[], number]> {
+    async getAllBoard(boardPaginationRequestDto: BoardPaginationRequestDto): Promise<{boards: Board[], totalBoards: number}> {
         const {titleSearch, provinceName, cityName, stuffCategory, limit, offset} = boardPaginationRequestDto;
         const query = this.boardRepository.createQueryBuilder('board')
         .leftJoin('board.creator', 'user')
@@ -121,7 +121,11 @@ export class BoardService {
             .offset(offset)
             .limit(limit)
 
-    return await query.getManyAndCount();
-    
+        const [boards, totalBoards] = await query.getManyAndCount();
+
+        return{
+            boards,
+            totalBoards
+        };
     }     
 }
