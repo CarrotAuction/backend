@@ -50,6 +50,7 @@ export class BoardService {
                 'board.stuffPrice',
                 'board.stuffCategory',
                 'board.createAt',
+                'user.id',
                 'user.nickname',
                 'province.name',
                 'city.name',
