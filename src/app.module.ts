@@ -5,13 +5,15 @@ import { UserModule } from './modules/user/user.module';
 import { MysqlModule } from './config/mysql/mysql.module';
 import { BoardModule } from './modules/board/board.module';
 import { CommentModule } from './modules/comment/comment.module';
+import { Redis1Module } from './config/redis/redis.module';
 
 @Module({
   imports: [
     UserModule,
-    MysqlModule,
     BoardModule,
     CommentModule,
+    MysqlModule,
+    Redis1Module,
   ],
   controllers: [AppController],
   providers: [AppService],
