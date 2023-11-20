@@ -82,7 +82,7 @@ export class BoardService {
     }
 
 
-    async getAllBoard(boardPaginationRequestDto: BoardPaginationRequestDto): Promise<{boards: Board[], totalBoards: number}> {
+    async getAllBoard(boardPaginationRequestDto: BoardPaginationRequestDto): Promise<{boards: Board[], totalPages: number}> {
         const {titleSearch, provinceName, cityName, stuffCategory, limit, offset} = boardPaginationRequestDto;
         const query = this.boardRepository.createQueryBuilder('board')
         .leftJoin('board.creator', 'user')
@@ -123,10 +123,11 @@ export class BoardService {
             .limit(limit)
 
         const [boards, totalBoards] = await query.getManyAndCount();
+        const totalPages = Math.ceil(totalBoards/limit);
 
         return{
             boards,
-            totalBoards
+            totalPages
         };
     }     
 }
