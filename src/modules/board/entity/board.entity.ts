@@ -28,6 +28,12 @@ export class Board extends BaseEntity {
   @Column({ type: 'enum', enum: StuffCategory })
   stuffCategory: StuffCategory;
 
+  @Column({default: 0})
+  likesCount: number;
+
+  @Column({ nullable: true })
+  imageUrl: string;
+
   @ManyToOne((type) => User)
   @JoinColumn({ name: 'user_id' })
   creator: User;
@@ -35,6 +41,4 @@ export class Board extends BaseEntity {
   @OneToMany((type) => Comment, (comment) => comment.board)
   comments: Comment[];
 
-  @Column({ nullable: true })
-  imageUrl: string;
 }
