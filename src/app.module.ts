@@ -5,7 +5,8 @@ import { UserModule } from './modules/user/user.module';
 import { MysqlModule } from './config/mysql/mysql.module';
 import { BoardModule } from './modules/board/board.module';
 import { CommentModule } from './modules/comment/comment.module';
-import { Redis1Module } from './config/redis/redis.module';
+import { RedisCacheModule } from './config/redis/redis.module';
+
 
 @Module({
   imports: [
@@ -13,7 +14,7 @@ import { Redis1Module } from './config/redis/redis.module';
     BoardModule,
     CommentModule,
     MysqlModule,
-    Redis1Module,
+    RedisCacheModule
   ],
   controllers: [AppController],
   providers: [AppService],
