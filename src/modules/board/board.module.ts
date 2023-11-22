@@ -15,6 +15,6 @@ import { MulterModule } from '@nestjs/platform-express';
     MulterModule.register(),
   ],
   controllers: [BoardController],
-  providers: [BoardService, BoardMapper],
+  providers: [BoardService, BoardMapper]
 })
 export class BoardModule {}
