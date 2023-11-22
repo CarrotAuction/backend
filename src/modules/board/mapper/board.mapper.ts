@@ -10,7 +10,7 @@ export class BoardMapper {
     DtoToEntity({stuffName, stuffContent, stuffPrice, stuffCategory}: CreateBoardRequestDto, creator: User): Board {
        
         const board = new Board();
-
+        
         board.stuffName = stuffName;
         board.stuffContent = stuffContent;
         board.stuffPrice = stuffPrice;
@@ -23,6 +23,7 @@ export class BoardMapper {
     EntityToDto(board: Board): CreateBoardResponseDto{
 
         return{
+          id: board.id,
           stuffName: board.stuffName,
           stuffContent: board.stuffContent,
           stuffPrice: board.stuffPrice,
