@@ -52,7 +52,7 @@ export class BoardController {
     summary: '게시글 전체 조회 API',
   })
   @ApiResponse({
-    status: 201,
+    status: 200,
     description: '게시글 전체 조회 성공',
   })
   @Get()
@@ -70,7 +70,7 @@ export class BoardController {
     summary: '게시글 상세 조회 API',
   })
   @ApiResponse({
-    status: 201,
+    status: 200,
     description: '게시글 상세 조회 성공',
   })
   @Get('/:id')

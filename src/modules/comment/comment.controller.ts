@@ -9,11 +9,12 @@ import {
 } from '@nestjs/common';
 import { CommentService } from './comment.service';
 import { CommentMapper } from './mapper/comment.mapper';
-import { ApiOperation, ApiResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiResponse, ApiTags } from '@nestjs/swagger';
 import { CreateCommentRequestDto } from './dto/comment-create-request.dto';
 import { Response } from 'express';
 import { CommentPaginationRequestDto } from './dto/commet-pagination-request.dto';
 
+@ApiTags('comments')
 @Controller('comments')
 export class CommentController {
   constructor(
@@ -44,7 +45,7 @@ export class CommentController {
     summary: '댓글 조회 API',
   })
   @ApiResponse({
-    status: 201,
+    status: 200,
     description: '댓글 조회 성공',
   })
   @Get()
