@@ -13,7 +13,7 @@ import {
 import { Response } from 'express';
 import { BoardService } from './board.service';
 import { CreateBoardRequestDto } from './dto/board-create-request.dto';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiBody, ApiResponse } from '@nestjs/swagger';
 import { BoardMapper } from './mapper/board.mapper';
 import { BoardPaginationRequestDto } from './dto/board-pagination-request.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -26,7 +26,13 @@ export class BoardController {
     private readonly boardMapper: BoardMapper,
   ) {}
 
-  @ApiOperation({ summary: '사용자는 게시글을 생성한다.' })
+  @ApiOperation({
+    summary: '게시글 생성 API',
+  })
+  @ApiResponse({
+    status: 201,
+    description: '게시글 생성 성공',
+  })
   @Post()
   @UseInterceptors(FileInterceptor('image'))
   async createBoard(
@@ -42,7 +48,13 @@ export class BoardController {
     res.status(HttpStatus.CREATED).json(response);
   }
 
-  @ApiOperation({ summary: '사용자는 전체 게시글을 조회한다.' })
+  @ApiOperation({
+    summary: '게시글 전체 조회 API',
+  })
+  @ApiResponse({
+    status: 201,
+    description: '게시글 전체 조회 성공',
+  })
   @Get()
   async getAllBoard(
     @Query() boardPaginationRequestDto: BoardPaginationRequestDto,
@@ -54,7 +66,13 @@ export class BoardController {
     res.status(HttpStatus.OK).json(response);
   }
 
-  @ApiOperation({ summary: '사용자는 상세 게시글을 조회한다.' })
+  @ApiOperation({
+    summary: '게시글 상세 조회 API',
+  })
+  @ApiResponse({
+    status: 201,
+    description: '게시글 상세 조회 성공',
+  })
   @Get('/:id')
   async getBoard(@Param('id') id: number, @Res() res: Response): Promise<void> {
     const response = await this.boardService.getBoardDetail(id);
