@@ -8,4 +8,5 @@ export class CreateBoardResponseDto {
   stuffCategory: StuffCategory;
   creatorId: number;
   imageUrl: string;
+  likesCount: number;
 }
