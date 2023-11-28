@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
-import { RedisModule } from '@songkeys/nestjs-redis';
+import { RedisModule as RedisMo } from '@songkeys/nestjs-redis';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 
 @Module({
   imports: [
-    RedisModule.forRootAsync({
+    RedisMo.forRootAsync({
       imports: [ConfigModule],
       useFactory: async (configService: ConfigService) => ({
         config: {
@@ -16,5 +16,6 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
       inject: [ConfigService],
     }),
   ],
+  exports: [RedisModule]
 })
-export class RedisCacheModule {}
+export class RedisModule {}
