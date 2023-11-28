@@ -60,4 +60,11 @@ export class BoardController {
     const response = await this.boardService.getBoardDetail(id);
     res.status(HttpStatus.OK).json(response);
   }
+
+   @Post('/:boardId/likes')
+  async updateBoardLike(@Body() body: { boardId: number, userId: number }, @Res() res: Response): Promise<void> {
+    const { boardId, userId } = body;
+    const response = await this.boardService.updateBoardLikes(boardId, userId);
+    res.status(HttpStatus.CREATED).json(response);
+  }
 }

@@ -8,13 +8,16 @@ import { User } from '../user/entity/user.entity';
 import { Comment } from '../comment/entity/comment.entity';
 import { S3Module } from '../../config/s3/s3.module';
 import { MulterModule } from '@nestjs/platform-express';
+import { RedisModule } from '@songkeys/nestjs-redis';
+import { RedisService } from '../../config/redis/redis.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Board, User, Comment]),
     S3Module,
+    RedisModule,
     MulterModule.register(),
   ],
   controllers: [BoardController],
-  providers: [BoardService, BoardMapper]
+  providers: [BoardService, BoardMapper, RedisService]
 })
 export class BoardModule {}
