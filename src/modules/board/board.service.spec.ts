@@ -5,6 +5,7 @@ import { BoardMapper } from './mapper/board.mapper';
 import { Board } from './entity/board.entity';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from '../user/entity/user.entity';
+import { RedisService } from 'src/config/redis/redis.service';
 
 type MockRepository<T = any> = Partial<Record<keyof Repository<T>, jest.Mock>>; 
 type MockMapper = Partial<Record<keyof BoardMapper, jest.Mock>>;
@@ -14,6 +15,7 @@ describe('BoardService', () => {
   let boardRepository: MockRepository<Board>;
   let userRepository: MockRepository<User>;
   let boardMapper: MockMapper;
+  let redisService: RedisService;
 
   const mockRepository = () => ({
     save: jest.fn(),
@@ -22,6 +24,9 @@ describe('BoardService', () => {
   const mockBoardMapper = {
     DtoToEntity: jest.fn(),
   };
+  const mockRedisService = {
+    setValues: jest.fn()
+  }
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -38,6 +43,10 @@ describe('BoardService', () => {
         {
           provide: BoardMapper,
           useValue: mockBoardMapper,
+        },
+        {
+          provide: RedisService,
+          useValue: mockRedisService,
         },
       ],
     }).compile();

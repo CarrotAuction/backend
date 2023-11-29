@@ -35,6 +35,7 @@ export class BoardMapper {
       stuffCategory: board.stuffCategory,
       creatorId: board.creator.id,
       imageUrl: board.imageUrl,
+      likesCount: board.likesCount
     };
   }
 }

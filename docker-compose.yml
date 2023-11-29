@@ -39,5 +39,20 @@ services:
     ports:
       - 3306:3306
 
+  redis:
+    container_name: carrotRedis
+    image: redis:alpine
+    command: redis-server --requirepass ${REDIS_PASSWORD} --appendonly yes
+    hostname: ${REDIS_HOST}
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+
+
 volumes:
   db-data:
+  redis-data:
