@@ -1,7 +1,7 @@
 import { User } from '../../user/entity/user.entity';
 import { BaseEntity } from '../../../global/common/base.entitiy';
 import { StuffCategory } from '../enums/stuffCategory.enum';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, VersionColumn } from 'typeorm';
 import { Comment } from '../../comment/entity/comment.entity';
 
 @Entity()
@@ -26,6 +26,9 @@ export class Board extends BaseEntity {
 
   @Column({ nullable: true })
   imageUrl: string;
+
+  @VersionColumn()
+  version: number;
 
   @ManyToOne((type) => User)
   @JoinColumn({ name: 'user_id' })
