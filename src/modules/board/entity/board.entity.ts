@@ -27,9 +27,6 @@ export class Board extends BaseEntity {
   @Column({ nullable: true })
   imageUrl: string;
 
-  @VersionColumn()
-  version: number;
-
   @ManyToOne((type) => User)
   @JoinColumn({ name: 'user_id' })
   creator: User;
