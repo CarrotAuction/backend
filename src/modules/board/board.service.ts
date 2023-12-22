@@ -193,32 +193,5 @@ export class BoardService {
     isBoardExist.likesCount = boardLikes;
     await this.boardRepository.save(isBoardExist);
     return isBoardExist;
-
-
-
-
-
-    // // 게시물 좋아요 key의 value를 확인해 value가 있으면 그냥 반환, 없으면 0해줌
-    // let boardLikesValue = await this.redisService.getValues(redisBoardKey); // boardLikesValue는 string임
-    // if(boardLikesValue === null){
-    //   await this.redisService.setValues(redisBoardKey, '0');
-    //   boardLikesValue = '0';
-    // }
-    // // 해당 유저가 게시물에 좋아요를 누른 list 가져오기
-    // const userBoardLikes = await this.redisService.getValuesList(redisUserKey);
-    // let boardLikes = parseInt(boardLikesValue); // Int로 변환
-    // if(!userBoardLikes.includes(boardId.toString())){ // 해당 유저가 해당 게시물에 좋아요를 누르지 않았다면
-    //   boardLikes++; // 좋아요 카운트 증가
-    //   await this.redisService.setValuesList(redisUserKey, boardId.toString()); // 해당 유저가 게시물에 좋아요를 눌렀음을 알려주도록 set
-    // }else{ // 해당 유저가 게시물에 좋아요를 눌렀다면
-    //   boardLikes--; // 좋아요 카운트 감소
-    //   await this.redisService.deleteValuesList(redisUserKey, boardId.toString()); // 해당 유저가 게시물에서 좋아요를 해제함을 알려주도록 set
-    // }
-    // // 게시물 좋아요 key에 좋아요 카운트를 반영
-    // await this.redisService.setValues(redisBoardKey, boardLikes.toString());
-    // // db에 좋아요카운트 업데이트
-    // isBoardExist.likesCount = boardLikes;
-    // await this.boardRepository.save(isBoardExist);
-    // return isBoardExist;
   }
 }
