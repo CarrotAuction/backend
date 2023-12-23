@@ -1,7 +1,7 @@
 import { User } from '../../user/entity/user.entity';
 import { BaseEntity } from '../../../global/common/base.entitiy';
 import { StuffCategory } from '../enums/stuffCategory.enum';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, VersionColumn } from 'typeorm';
 import { Comment } from '../../comment/entity/comment.entity';
 
 @Entity()
