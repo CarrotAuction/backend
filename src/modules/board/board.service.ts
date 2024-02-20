@@ -162,7 +162,7 @@ export class BoardService {
     };
   }
 
-  async updateBoardLikes(boardId: number, userId: number): Promise<Board>{
+  async updateBoardLikes(boardId: number, userId: number): Promise<{board: Board; isUserChecked: Boolean}>{
     const isBoardExist = await this.boardRepository.findOne({where: {id: boardId}});
     if(!isBoardExist){
       throw new NotFoundBoardException();
@@ -181,17 +181,20 @@ export class BoardService {
 
     // 좋아요를 누르지 않았다면 -> 좋아요+1 후 게시물key에 add
     let boardLikes: number;
+    let isUserChecked: boolean;
     if(!isUserLiked){
       boardLikes = await this.redisService.boardLikesInc(redisBoardKey);
       await this.redisService.addUserLikesSet(redisUserKey, boardId.toString());
+      isUserChecked = true;
     // 좋아요를 눌렀다면 -> 좋아요-1 후 게시물 key에 remove
     }else{
       boardLikes = await this.redisService.boardLikesDec(redisBoardKey);
       await this.redisService.removeUserLikesSet(redisUserKey, boardId.toString());
+      isUserChecked = false;
     }
     // 데이터베이스에 반영
     isBoardExist.likesCount = boardLikes;
     await this.boardRepository.save(isBoardExist);
-    return isBoardExist;
+    return {board:isBoardExist, isUserChecked};
   }
 }
