@@ -8,6 +8,7 @@ import {
   Query,
   Res,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { Response } from 'express';
@@ -17,8 +18,10 @@ import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BoardMapper } from './mapper/board.mapper';
 import { BoardPaginationRequestDto } from './dto/board-pagination-request.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
+import { UserJwtAuthGuard } from '../auth/guards/user-jwt.guard';
 
 @ApiTags('board')
+@UseGuards(UserJwtAuthGuard)
 @Controller('boards')
 export class BoardController {
   constructor(
