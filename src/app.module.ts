@@ -1,6 +1,6 @@
 import { Module } from '@nestjs/common';
 
-import { UserModule } from './modules/user/user.module';
+import { AuthModule } from './modules/auth/auth.module';
 import { MysqlModule } from './config/mysql/mysql.module';
 import { BoardModule } from './modules/board/board.module';
 import { CommentModule } from './modules/comment/comment.module';
@@ -9,7 +9,7 @@ import { RedisModule } from './config/redis/redis.module';
 
 @Module({
   imports: [
-    UserModule,
+    AuthModule,
     BoardModule,
     CommentModule,
     MysqlModule,

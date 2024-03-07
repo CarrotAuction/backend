@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../user/entity/user.entity';
-import { NotFoundUserException } from '../user/userException/NotFoundUserException';
+import { NotFoundUserException } from '../auth/authException/NotFoundUserException';
 import { NotFoundBoardException } from '../board/boardException/NotFoundBoardException';
 import { CommentMapper } from './mapper/comment.mapper';
 import { Comment } from './entity/comment.entity';

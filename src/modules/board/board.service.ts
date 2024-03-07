@@ -5,7 +5,7 @@ import { Repository } from 'typeorm';
 import { Board } from './entity/board.entity';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '../user/entity/user.entity';
-import { NotFoundUserException } from '../user/userException/NotFoundUserException';
+import { NotFoundUserException } from '../auth/authException/NotFoundUserException';
 import { NotFoundBoardException } from './boardException/NotFoundBoardException';
 import { Comment } from '../comment/entity/comment.entity';
 import { BoardPaginationRequestDto } from './dto/board-pagination-request.dto';
