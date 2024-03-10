@@ -4,7 +4,6 @@ import { AuthService} from './auth.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { SignUpUserInterface } from 'src/interfaces/signup-user-interface';
-import { AccessToken } from 'src/interfaces/access-token.interface';
 import { UserId } from '../../decorators/user-id.decorator';
 import { UserLocalAuthGuard } from './guards/user-local.auth.guard';
 
@@ -32,7 +31,7 @@ export class AuthController {
     async loginUser(
         @Body() authCredentialsDto: AuthCredentialsDto,
         @UserId() userId: number
-    ): Promise<AccessToken>{
+    ): Promise<{accessToken: string}>{
         return this.authService.loginUser(userId);
     }
 }

@@ -15,11 +15,8 @@ import { ProvinceInvalidException } from './authException/ProvinceInvalidExcepti
 import { CityInvalidException } from './authException/CityInvalidException';
 import * as bcrypt from 'bcrypt';
 import { SignUpUserInterface } from 'src/interfaces/signup-user-interface';
-import { Payload } from 'src/interfaces/payload.interface';
-import { AccessToken } from 'src/interfaces/access-token.interface';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { UserAuthResult } from 'src/interfaces/user-auth-result.interface';
 
 @Injectable()
 export class AuthService {
@@ -81,14 +78,13 @@ export class AuthService {
     }
     
     // 비밀번호 체크
-    async validateUser(authCredentialsDto: AuthCredentialsDto): Promise<UserAuthResult>{
+    async validateUser(authCredentialsDto: AuthCredentialsDto): Promise<{id: number}>{
         const {accountID, password} = authCredentialsDto;
         const user = await this.userRepository.findOneBy({accountID});
         if(user){
             const isPasswordMatch = await bcrypt.compare(password, user.password);
             if(isPasswordMatch){
-                const {password, ...result} = user;
-                return result;
+                return {id: user.id};
             }else{
                 throw new LoginInvalidPasswordException();
             }
@@ -98,8 +94,8 @@ export class AuthService {
 
     }
 
-    async loginUser(userId: number): Promise<AccessToken> {
-        const payload: Payload = {id: userId};
+    async loginUser(id: number): Promise<{accessToken: string}> {
+        const payload: {id: number} = {id};
         const accessToken = this.jwtService.sign(payload, {
             secret: this.configService.get('JWT_SECRET_KEY'),
         });
