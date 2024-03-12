@@ -10,10 +10,7 @@ export class Comment extends BaseEntity {
     id: number;
 
     @Column()
-    price: number;
-
-    @Column()
-    openChatUrl: string;
+    content: string;
 
     @ManyToOne(type => Board, board => board.comments)
     @JoinColumn({name: "board_id"})
