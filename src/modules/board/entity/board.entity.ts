@@ -7,8 +7,6 @@ import { BoardStatus } from '../../../types/enums/boardStatus.enum';
 
 @Entity()
 export class Board extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
 
   @Column()
   stuffName!: string;
