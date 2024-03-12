@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateBoardRequestDto } from '../dto/board-create-request.dto';
+import { CreateBoardDto } from '../dto/create-board.dto';
 import { Board } from '../entity/board.entity';
 import { CreateBoardResponseDto } from '../dto/board-create-response.dto';
 import { User } from '../../user/entity/user.entity';
@@ -15,7 +15,7 @@ export class BoardMapper {
       stuffPrice,
       tradingPlace,
       stuffCategory,
-    }: CreateBoardRequestDto,
+    }: CreateBoardDto,
   ): Board {
     const board = new Board();
 

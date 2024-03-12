@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { CreateBoardRequestDto } from './dto/board-create-request.dto';
+import { CreateBoardDto } from './dto/create-board.dto';
 import { Repository } from 'typeorm';
 import { Board } from './entity/board.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -28,14 +28,14 @@ export class BoardService {
   ) {}
 
   async createBoard(
-    createBoardRequestDto: CreateBoardRequestDto,
+    createBoardDto: CreateBoardDto,
     id: number,
     image: Express.Multer.File,
   ): Promise<UserCreateResultInterface> {
 
     const creator = await this.userRepository.findOneBy({id});
     const imageUrl = await this.s3Service.uploadImage(image);
-    const newBoardEntity = this.boardMapper.DtoToEntity(creator, imageUrl, createBoardRequestDto);
+    const newBoardEntity = this.boardMapper.DtoToEntity(creator, imageUrl, createBoardDto);
 
     const savedBoard = await this.boardRepository.save(newBoardEntity);
 

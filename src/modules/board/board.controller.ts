@@ -14,7 +14,7 @@ import {
 } from '@nestjs/common';
 import { Response } from 'express';
 import { BoardService } from './board.service';
-import { CreateBoardRequestDto } from './dto/board-create-request.dto';
+import { CreateBoardDto } from './dto/create-board.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { BoardPaginationRequestDto } from './dto/board-pagination-request.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
@@ -35,12 +35,12 @@ export class BoardController {
   @Post()
   @UseInterceptors(FileInterceptor('image'))
   async createBoard(
-    @Body() createBoardReuqestDto: CreateBoardRequestDto,
+    @Body() createBoardDto: CreateBoardDto,
     @UploadedFile() image: Express.Multer.File,
     @UserId() id: number,
   ): Promise<UserCreateResultInterface> {
-    this.logger.verbose(`1.[사용자 ${id}가 게시물 생성] 2.[Dto: ${JSON.stringify(createBoardReuqestDto)}]`);
-    return this.boardService.createBoard(createBoardReuqestDto, id, image);
+    this.logger.verbose(`1.[사용자 ${id}가 게시물 생성] 2.[Dto: ${JSON.stringify(createBoardDto)}]`);
+    return this.boardService.createBoard(createBoardDto, id, image);
   }
 
   @ApiOperation({ summary: '사용자는 전체 게시글을 조회한다.' })
