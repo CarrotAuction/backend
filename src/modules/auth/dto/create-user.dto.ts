@@ -1,25 +1,18 @@
 import { ApiProperty } from "@nestjs/swagger";
-import { IsNotEmpty } from "class-validator";
+import { IsNotEmptyAndString } from "../../../decorators/is-Not-Empty-And-String.decorator";
+import { AuthCredentialsDto } from "./auth-credentials.dto";
 
-export class CreateUserDto {
+export class CreateUserDto extends AuthCredentialsDto{
 
-    @ApiProperty({description: '사용자 비밀번호', example: 'asdfg'})
-    @IsNotEmpty()
-    password: string;
+    @ApiProperty({type: String, description: '사용자 닉네임', required: true, example: '야망있는최필규'})
+    @IsNotEmptyAndString(1, 15)
+    nickname!: string;
 
-    @ApiProperty({description: '사용자 닉네임', example: '당근마켓하잉'})
-    @IsNotEmpty()
-    nickname: string;
+    @ApiProperty({type: String, description: '사용자가 거주하는 행정구역', required: true, example: '서울특별시'})
+    @IsNotEmptyAndString()
+    province!: string;
 
-    @ApiProperty({description: '사용자 아이디', example: 'yeye2me'})
-    @IsNotEmpty()
-    accountID: string;
-
-    @ApiProperty({description: '사용자가 거주하는 행정구역', example: '서울특별시'})
-    @IsNotEmpty()
-    province: string;
-
-    @ApiProperty({description: '사용자 거주하는 시/군/구', example: '강남구'})
-    @IsNotEmpty()
-    city: string;
+    @ApiProperty({type: String, description: '사용자 거주하는 시/군/구', required: true, example: '강남구'})
+    @IsNotEmptyAndString()
+    city!: string;
 }
