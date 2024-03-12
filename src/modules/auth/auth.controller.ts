@@ -3,7 +3,7 @@ import { CreateUserDto } from './dto/create-user.dto';
 import { AuthService} from './auth.service';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
-import { SignUpUserInterface } from 'src/interfaces/signup-user-interface';
+import { UserCreateResultInterface } from '../../interfaces/user-create-result.interface';
 import { UserId } from '../../decorators/user-id.decorator';
 import { UserLocalAuthGuard } from './guards/user-local.auth.guard';
 
@@ -20,7 +20,7 @@ export class AuthController {
     @Post('/signup')
     async registerUser(
         @Body() createUserDto: CreateUserDto
-    ): Promise<SignUpUserInterface> {
+    ): Promise<UserCreateResultInterface> {
         return await this.authService.signup(createUserDto);
     }
 

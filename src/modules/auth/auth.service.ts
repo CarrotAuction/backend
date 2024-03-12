@@ -14,7 +14,7 @@ import { City } from '../location/entity/city.entity';
 import { ProvinceInvalidException } from './authException/ProvinceInvalidException';
 import { CityInvalidException } from './authException/CityInvalidException';
 import * as bcrypt from 'bcrypt';
-import { SignUpUserInterface } from 'src/interfaces/signup-user-interface';
+import { UserCreateResultInterface } from '../../interfaces/user-create-result.interface';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
 
@@ -37,7 +37,7 @@ export class AuthService {
     ) {}
 
     // 회원가입
-    async signup(createUserDto: CreateUserDto): Promise<SignUpUserInterface>{
+    async signup(createUserDto: CreateUserDto): Promise<UserCreateResultInterface>{
         // 행정구역 유효성체크
         const province = await this.provinceRepository.findOne({where: {name: createUserDto.province}});
         if(!province) {

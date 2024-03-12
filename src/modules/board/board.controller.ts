@@ -20,7 +20,7 @@ import { BoardPaginationRequestDto } from './dto/board-pagination-request.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserJwtAuthGuard } from '../auth/guards/user-jwt.guard';
 import { UserId } from '../../decorators/user-id.decorator';
-import { Board } from './entity/board.entity';
+import { UserCreateResultInterface } from '../../interfaces/user-create-result.interface';
 
 @ApiTags('board')
 @UseGuards(UserJwtAuthGuard)
@@ -38,8 +38,7 @@ export class BoardController {
     @Body() createBoardReuqestDto: CreateBoardRequestDto,
     @UploadedFile() image: Express.Multer.File,
     @UserId() id: number,
-    @Res() res: Response,
-  ): Promise<Board> {
+  ): Promise<UserCreateResultInterface> {
     this.logger.verbose(`1.[사용자 ${id}가 게시물 생성] 2.[Dto: ${JSON.stringify(createBoardReuqestDto)}]`);
     return this.boardService.createBoard(createBoardReuqestDto, id, image);
   }

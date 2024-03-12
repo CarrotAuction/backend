@@ -11,6 +11,7 @@ import { BoardPaginationRequestDto } from './dto/board-pagination-request.dto';
 import { S3Service } from '../../config/s3/s3.service';
 import { RedisService } from '../../config/redis/redis.service';
 import { BoardMapper } from './mapper/board.mapper';
+import { UserCreateResultInterface } from '../../interfaces/user-create-result.interface';
 @Injectable()
 export class BoardService {
   constructor(
@@ -30,13 +31,18 @@ export class BoardService {
     createBoardRequestDto: CreateBoardRequestDto,
     id: number,
     image: Express.Multer.File,
-  ): Promise<Board> {
+  ): Promise<UserCreateResultInterface> {
 
     const creator = await this.userRepository.findOneBy({id});
     const imageUrl = await this.s3Service.uploadImage(image);
-    const newBoard = this.boardMapper.DtoToEntity(creator, imageUrl, createBoardRequestDto);
+    const newBoardEntity = this.boardMapper.DtoToEntity(creator, imageUrl, createBoardRequestDto);
 
-    return await this.boardRepository.save(newBoard);
+    const savedBoard = await this.boardRepository.save(newBoardEntity);
+
+    return {
+      message: '새로운 게시물 생성',
+      userId: savedBoard.creator.id
+    };
   }
 
   async getBoardDetail(
