@@ -7,13 +7,14 @@ import { User } from '../../user/entity/user.entity';
 @Injectable()
 export class BoardMapper {
   DtoToEntity(
+    creator: User,
+    image: string,
     {
       stuffName,
       stuffContent,
       stuffPrice,
       stuffCategory,
     }: CreateBoardRequestDto,
-    creator: User,
   ): Board {
     const board = new Board();
 
@@ -21,7 +22,8 @@ export class BoardMapper {
     board.stuffContent = stuffContent;
     board.stuffPrice = stuffPrice;
     board.stuffCategory = stuffCategory;
-    board.creator = creator;
+    board.imageUrl = image;
+    board.creator= creator;
 
     return board;
   }

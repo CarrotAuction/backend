@@ -3,6 +3,7 @@ import {
   Controller,
   Get,
   HttpStatus,
+  Logger,
   Param,
   Post,
   Query,
@@ -15,18 +16,19 @@ import { Response } from 'express';
 import { BoardService } from './board.service';
 import { CreateBoardRequestDto } from './dto/board-create-request.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { BoardMapper } from './mapper/board.mapper';
 import { BoardPaginationRequestDto } from './dto/board-pagination-request.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { UserJwtAuthGuard } from '../auth/guards/user-jwt.guard';
+import { UserId } from '../../decorators/user-id.decorator';
+import { Board } from './entity/board.entity';
 
 @ApiTags('board')
 @UseGuards(UserJwtAuthGuard)
 @Controller('boards')
 export class BoardController {
+  private readonly logger = new Logger('Board');
   constructor(
     private readonly boardService: BoardService,
-    private readonly boardMapper: BoardMapper,
   ) {}
 
   @ApiOperation({ summary: '사용자는 게시글을 생성한다.' })
@@ -35,14 +37,11 @@ export class BoardController {
   async createBoard(
     @Body() createBoardReuqestDto: CreateBoardRequestDto,
     @UploadedFile() image: Express.Multer.File,
+    @UserId() id: number,
     @Res() res: Response,
-  ): Promise<void> {
-    const newBoard = await this.boardService.createBoard(
-      createBoardReuqestDto,
-      image,
-    );
-    const response = this.boardMapper.EntityToDto(newBoard);
-    res.status(HttpStatus.CREATED).json(response);
+  ): Promise<Board> {
+    this.logger.verbose(`1.[사용자 ${id}가 게시물 생성] 2.[Dto: ${JSON.stringify(createBoardReuqestDto)}]`);
+    return this.boardService.createBoard(createBoardReuqestDto, id, image);
   }
 
   @ApiOperation({ summary: '사용자는 전체 게시글을 조회한다.' })

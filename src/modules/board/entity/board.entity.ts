@@ -3,6 +3,7 @@ import { BaseEntity } from '../../../global/common/base.entitiy';
 import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, VersionColumn } from 'typeorm';
 import { Comment } from '../../comment/entity/comment.entity';
 import { StuffCategory } from '../../../types/enums/stuffCategory.enum';
+import { BoardStatus } from '../../../types/enums/boardStatus.enum';
 
 @Entity()
 export class Board extends BaseEntity {
@@ -10,18 +11,21 @@ export class Board extends BaseEntity {
   id: number;
 
   @Column()
-  stuffName: string;
+  stuffName!: string;
 
   @Column()
-  stuffContent: string;
+  stuffContent!: string;
 
   @Column()
-  stuffPrice: number;
+  stuffPrice!: number;
 
-  @Column({ type: 'enum', enum: StuffCategory })
+  @Column({ name: 'stuffCategory', type: 'varchar', length: 128 })
   stuffCategory: StuffCategory;
 
-  @Column({default: 0})
+  @Column({ name: 'status', type: 'varchar', length: 128, default: BoardStatus.OPEN })
+  status: keyof typeof BoardStatus;
+
+  @Column({ default: 0 })
   likesCount: number;
 
   @Column({ nullable: true })

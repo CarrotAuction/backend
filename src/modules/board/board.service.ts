@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { CreateBoardRequestDto } from './dto/board-create-request.dto';
-import { BoardMapper } from './mapper/board.mapper';
 import { Repository } from 'typeorm';
 import { Board } from './entity/board.entity';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -11,42 +10,33 @@ import { Comment } from '../comment/entity/comment.entity';
 import { BoardPaginationRequestDto } from './dto/board-pagination-request.dto';
 import { S3Service } from '../../config/s3/s3.service';
 import { RedisService } from '../../config/redis/redis.service';
+import { BoardMapper } from './mapper/board.mapper';
 @Injectable()
 export class BoardService {
   constructor(
     @InjectRepository(Board)
     private readonly boardRepository: Repository<Board>,
-
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
-
     @InjectRepository(Comment)
     private readonly commentRepository: Repository<Comment>,
 
     private readonly boardMapper: BoardMapper,
-
     private readonly s3Service: S3Service,
-
     private readonly redisService: RedisService
   ) {}
 
   async createBoard(
     createBoardRequestDto: CreateBoardRequestDto,
+    id: number,
     image: Express.Multer.File,
   ): Promise<Board> {
-    const creator = await this.userRepository.findOne({
-      where: { id: createBoardRequestDto.creatorId },
-    });
-    if (!creator) {
-      throw new NotFoundUserException();
-    }
-    const newBoardEntity = this.boardMapper.DtoToEntity(
-      createBoardRequestDto,
-      creator,
-    );
+
+    const creator = await this.userRepository.findOneBy({id});
     const imageUrl = await this.s3Service.uploadImage(image);
-    newBoardEntity.imageUrl = imageUrl;
-    return await this.boardRepository.save(newBoardEntity);
+    const newBoard = this.boardMapper.DtoToEntity(creator, imageUrl, createBoardRequestDto);
+
+    return await this.boardRepository.save(newBoard);
   }
 
   async getBoardDetail(
