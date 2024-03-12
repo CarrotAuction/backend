@@ -13,6 +13,7 @@ export class BoardMapper {
       stuffName,
       stuffContent,
       stuffPrice,
+      tradingPlace,
       stuffCategory,
     }: CreateBoardRequestDto,
   ): Board {
@@ -21,6 +22,7 @@ export class BoardMapper {
     board.stuffName = stuffName;
     board.stuffContent = stuffContent;
     board.stuffPrice = stuffPrice;
+    board.tradingPlace = tradingPlace;
     board.stuffCategory = stuffCategory;
     board.imageUrl = image;
     board.creator= creator;

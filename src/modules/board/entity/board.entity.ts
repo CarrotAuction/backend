@@ -19,6 +19,9 @@ export class Board extends BaseEntity {
   @Column()
   stuffPrice!: number;
 
+  @Column()
+  tradingPlace!: string;
+
   @Column({ name: 'stuffCategory', type: 'varchar', length: 128 })
   stuffCategory: StuffCategory;
 

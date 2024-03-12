@@ -15,13 +15,13 @@ export class CreateBoardRequestDto {
   @Type(() => Number)
   stuffPrice: number;
 
+  @IsNotEmpty()
+  @IsString()
+  tradingPlace: string;
+
   @IsEnum(StuffCategory)
   @IsNotEmpty()
   stuffCategory: StuffCategory;
-
-  @IsNotEmpty()
-  @IsString()
-  detailAdress: string;
 
   image: Express.Multer.File;
 }
