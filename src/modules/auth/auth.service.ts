@@ -17,6 +17,7 @@ import * as bcrypt from 'bcrypt';
 import { UserCreateResultInterface } from '../../interfaces/user-create-result.interface';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
+import { Region } from '../location/entity/region.entity';
 
 @Injectable()
 export class AuthService {
@@ -31,6 +32,9 @@ export class AuthService {
         @InjectRepository(City)
         private readonly cityRepository: Repository<City>,
 
+        @InjectRepository(Region)
+        private readonly regionRepository: Repository<Region>,
+
         private readonly jwtService: JwtService,
         readonly configService: ConfigService,
         private readonly userMapper: UserMapper
@@ -38,20 +42,8 @@ export class AuthService {
 
     // 회원가입
     async signup(createUserDto: CreateUserDto): Promise<UserCreateResultInterface>{
-        // 행정구역 유효성체크
-        const province = await this.provinceRepository.findOne({where: {name: createUserDto.province}});
-        if(!province) {
-            throw new ProvinceInvalidException();
-        }
-        // 시/군/구 유효성체크
-        const city = await this.cityRepository.createQueryBuilder("city")
-                        .leftJoin("province", "province", "city.province_id = province.id")
-                        .where("city.name = :cityName", {cityName: createUserDto.city})
-                        .andWhere("province.id = :provinceId", {provinceId: province.id})
-                        .getOne()
-        if(!city) {
-            throw new CityInvalidException();
-        }
+        // 지역 체크
+        const region = await this.regionRepository.findOne({where: {name:createUserDto.region}});
         // 이메일 유효성체크
         const isAccountIDExist = await this.userRepository.findOne({where: {accountID:createUserDto.accountID}});
         if(isAccountIDExist) {
@@ -68,7 +60,7 @@ export class AuthService {
         const hashedPassword = await bcrypt.hash(password, salt);
         createUserDto.password = hashedPassword;
 
-        const newUserEntity = this.userMapper.DtoToEntity(createUserDto, province, city);
+        const newUserEntity = this.userMapper.DtoToEntity(createUserDto,region);
         const savedUser = await this.userRepository.save(newUserEntity);
 
         return {

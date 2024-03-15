@@ -11,10 +11,11 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { UserLocalStrategy } from './strategies/user-local.auth.strategy';
 import { UserJwtStrategy } from './strategies/user-jwt.strategy';
+import { Region } from '../location/entity/region.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Province, City]),
+    TypeOrmModule.forFeature([User, Province, City, Region]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],

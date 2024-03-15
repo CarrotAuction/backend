@@ -8,11 +8,8 @@ export class CreateUserDto extends AuthCredentialsDto{
     @IsNotEmptyAndString(1, 15)
     nickname!: string;
 
-    @ApiProperty({type: String, description: '사용자가 거주하는 행정구역', required: true, example: '서울특별시'})
+    @ApiProperty({type: String, description: '사용자가 거주하는 동/면/리', required: true, example: '역삼동'})
     @IsNotEmptyAndString()
-    province!: string;
+    region!: string;
 
-    @ApiProperty({type: String, description: '사용자 거주하는 시/군/구', required: true, example: '강남구'})
-    @IsNotEmptyAndString()
-    city!: string;
 }
