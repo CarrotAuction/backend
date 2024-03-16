@@ -7,6 +7,7 @@ import { User } from "./src/modules/user/entity/user.entity";
 import { Board } from "./src/modules/board/entity/board.entity";
 import { Comment } from "./src/modules/comment/entity/comment.entity";
 import { Region } from "./src/modules/location/entity/region.entity";
+import * as path from 'path';
 
 config();
 
@@ -20,5 +21,5 @@ export default new DataSource({
     password: configService.get('DB_PASSWORD'),
     database: configService.get('DB_NAME'),
     migrations: ['migrations/**'],
-    entities: [User, Board, Province, City, Comment, Region],
+    entities: [path.join(__dirname, './modules/*/entity/*.entity.{ts,js}')],
 });
