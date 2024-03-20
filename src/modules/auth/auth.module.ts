@@ -4,14 +4,14 @@ import { AuthService} from './auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../user/entity/user.entity';
 import { UserMapper } from './mapper/user.mapper';
-import { Province } from '../location/entity/province.entity';
-import { City } from '../location/entity/city.entity';
+import { Province } from '../region/entity/province.entity';
+import { City } from '../region/entity/city.entity';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
 import { UserLocalStrategy } from './strategies/user-local.auth.strategy';
 import { UserJwtStrategy } from './strategies/user-jwt.strategy';
-import { Region } from '../location/entity/region.entity';
+import { Region } from '../region/entity/region.entity';
 
 @Module({
   imports: [

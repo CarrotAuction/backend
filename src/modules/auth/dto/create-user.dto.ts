@@ -1,6 +1,9 @@
 import { ApiProperty } from "@nestjs/swagger";
 import { IsNotEmptyAndString } from "../../../decorators/is-Not-Empty-And-String.decorator";
 import { AuthCredentialsDto } from "./auth-credentials.dto";
+import { RegionDto } from "../../region/dto/region.dto";
+import { ValidateNested } from "class-validator";
+import { Type } from "class-transformer";
 
 export class CreateUserDto extends AuthCredentialsDto{
 
@@ -8,8 +11,9 @@ export class CreateUserDto extends AuthCredentialsDto{
     @IsNotEmptyAndString(1, 15)
     nickname!: string;
 
-    @ApiProperty({type: String, description: '사용자가 거주하는 동/면/리', required: true, example: '역삼동'})
-    @IsNotEmptyAndString()
-    region!: string;
+    @ApiProperty({type: String, description: '사용자가 거주하는 지역 정보', required: true})
+    @Type(() => RegionDto)
+    @ValidateNested()
+    region!: RegionDto;
 
 }

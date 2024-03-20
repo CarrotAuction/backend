@@ -1,8 +1,8 @@
-import { City } from "../../location/entity/city.entity";
+import { City } from "../../region/entity/city.entity";
 import { BaseEntity } from "../../../global/common/base.entitiy";
 import { Column, Entity, JoinColumn, ManyToOne} from "typeorm";
-import { Province } from "../../location/entity/province.entity";
-import { Region } from "../../location/entity/region.entity";
+import { Province } from "../../region/entity/province.entity";
+import { Region } from "../../region/entity/region.entity";
 
 @Entity()
 export class User extends BaseEntity{

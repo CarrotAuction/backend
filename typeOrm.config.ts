@@ -1,12 +1,12 @@
 import { ConfigService } from "@nestjs/config";
 import { config } from "dotenv";
-import { City } from "./src/modules/location/entity/city.entity";
-import { Province } from "./src/modules/location/entity/province.entity";
+import { City } from "./src/modules/region/entity/city.entity";
+import { Province } from "./src/modules/region/entity/province.entity";
 import { DataSource } from "typeorm";
 import { User } from "./src/modules/user/entity/user.entity";
 import { Board } from "./src/modules/board/entity/board.entity";
 import { Comment } from "./src/modules/comment/entity/comment.entity";
-import { Region } from "./src/modules/location/entity/region.entity";
+import { Region } from "./src/modules/region/entity/region.entity";
 import * as path from 'path';
 
 config();

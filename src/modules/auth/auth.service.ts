@@ -9,15 +9,13 @@ import { NicknameAlreadyExistsException } from './authException/NicknameAlreadyE
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { NotFoundUserException } from './authException/NotFoundUserException';
 import { LoginInvalidPasswordException } from './authException/LoginInvalidPasswordException';
-import { Province } from '../location/entity/province.entity';
-import { City } from '../location/entity/city.entity';
-import { ProvinceInvalidException } from './authException/ProvinceInvalidException';
-import { CityInvalidException } from './authException/CityInvalidException';
+import { Province } from '../region/entity/province.entity';
+import { City } from '../region/entity/city.entity';
 import * as bcrypt from 'bcrypt';
 import { UserCreateResultInterface } from '../../interfaces/user-create-result.interface';
 import { JwtService } from '@nestjs/jwt';
 import { ConfigService } from '@nestjs/config';
-import { Region } from '../location/entity/region.entity';
+import { Region } from '../region/entity/region.entity';
 
 @Injectable()
 export class AuthService {
@@ -42,8 +40,15 @@ export class AuthService {
 
     // 회원가입
     async signup(createUserDto: CreateUserDto): Promise<UserCreateResultInterface>{
-        // 지역 체크
-        const region = await this.regionRepository.findOne({where: {name:createUserDto.region}});
+
+        // 동/면/리 같을 경우 상위 지역으로 중복 방지 
+        const parentRegion = await this.regionRepository.findOne({where: {name: createUserDto.region.parentRegionName}});
+        const region = await this.regionRepository.findOne({where: {
+            name: createUserDto.region.RegionName,
+            parent: parentRegion
+        }});
+        
+        
         // 이메일 유효성체크
         const isAccountIDExist = await this.userRepository.findOne({where: {accountID:createUserDto.accountID}});
         if(isAccountIDExist) {
