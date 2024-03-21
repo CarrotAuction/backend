@@ -12,6 +12,7 @@ import { S3Service } from '../../config/s3/s3.service';
 import { RedisService } from '../../config/redis/redis.service';
 import { BoardMapper } from './mapper/board.mapper';
 import { UserCreateResultInterface } from '../../interfaces/user-create-result.interface';
+
 @Injectable()
 export class BoardService {
   constructor(
@@ -33,9 +34,10 @@ export class BoardService {
     image: Express.Multer.File,
   ): Promise<UserCreateResultInterface> {
 
-    const creator = await this.userRepository.findOneBy({id});
+    const creator = await this.userRepository.findOne({where: {id: id}, relations: ['region']});
+    const region = creator.region;
     const imageUrl = await this.s3Service.uploadImage(image);
-    const newBoardEntity = this.boardMapper.DtoToEntity(creator, imageUrl, createBoardDto);
+    const newBoardEntity = this.boardMapper.DtoToEntity(creator, imageUrl, region, createBoardDto);
 
     const savedBoard = await this.boardRepository.save(newBoardEntity);
 

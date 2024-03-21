@@ -4,6 +4,7 @@ import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGenerat
 import { Comment } from '../../comment/entity/comment.entity';
 import { StuffCategory } from '../../../types/enums/stuffCategory.enum';
 import { BoardStatus } from '../../../types/enums/boardStatus.enum';
+import { Region } from '../../region/entity/region.entity';
 
 @Entity()
 export class Board extends BaseEntity {
@@ -35,6 +36,10 @@ export class Board extends BaseEntity {
   @ManyToOne((type) => User)
   @JoinColumn({ name: 'user_id' })
   creator: User;
+
+  @ManyToOne((type) => Region)
+  @JoinColumn({name: 'region_id' })
+  region: Region;
 
   @OneToMany((type) => Comment, (comment) => comment.board)
   comments: Comment[];
