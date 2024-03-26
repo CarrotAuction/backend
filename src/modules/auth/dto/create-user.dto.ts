@@ -11,7 +11,7 @@ export class CreateUserDto extends AuthCredentialsDto{
     @IsNotEmptyAndString(1, 15)
     nickname!: string;
 
-    @ApiProperty({type: String, description: '사용자가 거주하는 지역 정보', required: true})
+    @ApiProperty({type: () => RegionDto, description: '사용자가 거주하는 지역 정보', required: true})
     @Type(() => RegionDto)
     @ValidateNested()
     region!: RegionDto;

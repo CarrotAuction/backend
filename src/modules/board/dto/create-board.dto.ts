@@ -22,10 +22,16 @@ export class CreateBoardDto {
   @IsNotEmptyAndString()
   tradingPlace!: string;
 
-  @ApiProperty({type: 'enum', description: '게시물 카테고리', required: true, example: '뷰티'})
+  @ApiProperty({
+    enum: StuffCategory,
+    description: '게시물 카테고리',
+    required: true,
+    example: StuffCategory.BEAUTY
+  })
   @IsEnum(StuffCategory)
   @IsNotEmpty()
   stuffCategory!: StuffCategory;
+
 
   @ApiProperty({type: String, format: 'binary', description: '첨부할 사진'})
   @IsOptional()

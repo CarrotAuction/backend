@@ -9,8 +9,6 @@ import { NicknameAlreadyExistsException } from './authException/NicknameAlreadyE
 import { AuthCredentialsDto } from './dto/auth-credentials.dto';
 import { NotFoundUserException } from './authException/NotFoundUserException';
 import { LoginInvalidPasswordException } from './authException/LoginInvalidPasswordException';
-import { Province } from '../region/entity/province.entity';
-import { City } from '../region/entity/city.entity';
 import * as bcrypt from 'bcrypt';
 import { UserCreateResultInterface } from '../../interfaces/user-create-result.interface';
 import { JwtService } from '@nestjs/jwt';
@@ -23,13 +21,6 @@ export class AuthService {
     constructor(
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
-
-        @InjectRepository(Province)
-        private readonly provinceRepository: Repository<Province>,
-
-        @InjectRepository(City)
-        private readonly cityRepository: Repository<City>,
-
         @InjectRepository(Region)
         private readonly regionRepository: Repository<Region>,
 

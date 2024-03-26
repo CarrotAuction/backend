@@ -4,8 +4,6 @@ import { AuthService} from './auth.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from '../user/entity/user.entity';
 import { UserMapper } from './mapper/user.mapper';
-import { Province } from '../region/entity/province.entity';
-import { City } from '../region/entity/city.entity';
 import { JwtModule, JwtService } from '@nestjs/jwt';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { PassportModule } from '@nestjs/passport';
@@ -15,7 +13,7 @@ import { Region } from '../region/entity/region.entity';
 
 @Module({
   imports: [
-    TypeOrmModule.forFeature([User, Province, City, Region]),
+    TypeOrmModule.forFeature([User, Region]),
     JwtModule.registerAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
