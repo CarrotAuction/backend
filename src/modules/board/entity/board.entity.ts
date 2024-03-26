@@ -1,11 +1,12 @@
 import { User } from '../../user/entity/user.entity';
-import { BaseEntity } from '../../../global/common/base.entitiy';
+import { BaseEntity } from '../../../global/common/entity/base.entitiy';
 import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, VersionColumn } from 'typeorm';
 import { Comment } from '../../comment/entity/comment.entity';
 import { StuffCategory } from '../../../types/enums/stuffCategory.enum';
 import { BoardStatus } from '../../../types/enums/boardStatus.enum';
 import { Region } from '../../region/entity/region.entity';
 
+@Index('board_idx', ['regionId', 'deleteAt', 'id', 'createAt', 'stuffName', 'status', 'imageUrl'])
 @Entity()
 export class Board extends BaseEntity {
 
@@ -43,4 +44,7 @@ export class Board extends BaseEntity {
 
   @OneToMany((type) => Comment, (comment) => comment.board)
   comments: Comment[];
+
+  @Column({ type: 'int', name: 'region_id', nullable: true })
+  regionId: number;
 }
