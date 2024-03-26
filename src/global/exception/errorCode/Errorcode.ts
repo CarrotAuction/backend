@@ -9,5 +9,8 @@ export enum ErrorCode {
     USER_INVALID_CITY = 'U006',
 
     //Board
-    BOARD_NOT_FOUND = 'B001'
+    BOARD_NOT_FOUND = 'B001',
+    
+    //pagination
+    PAGE_NOT_EXIST = 'P001',
 }

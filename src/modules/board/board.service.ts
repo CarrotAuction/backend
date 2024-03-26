@@ -7,11 +7,14 @@ import { User } from '../user/entity/user.entity';
 import { NotFoundUserException } from '../auth/authException/NotFoundUserException';
 import { NotFoundBoardException } from './boardException/NotFoundBoardException';
 import { Comment } from '../comment/entity/comment.entity';
-import { BoardPaginationRequestDto } from './dto/board-pagination-request.dto';
 import { S3Service } from '../../config/s3/s3.service';
 import { RedisService } from '../../config/redis/redis.service';
 import { BoardMapper } from './mapper/board.mapper';
 import { UserCreateResultInterface } from '../../interfaces/user-create-result.interface';
+import { PageOptionsDto } from '../../global/common/dto/page-options.dto';
+import { PaginationResponseDto } from '../../global/common/dto/pagination-response.dto';
+import { PageMetaDto } from '../../global/common/dto/page-meta.dto';
+import { PageNotExists } from '../../global/exception/pageException/PageNotExistsException';
 
 @Injectable()
 export class BoardService {
@@ -97,67 +100,30 @@ export class BoardService {
     };
   }
 
-  async getAllBoard(
-    boardPaginationRequestDto: BoardPaginationRequestDto,
-  ): Promise<{ boards: Board[]; totalPages: number }> {
-    const {
-      titleSearch,
-      provinceName,
-      cityName,
-      stuffCategory,
-      limit,
-      offset,
-    } = boardPaginationRequestDto;
-    const query = this.boardRepository
+  async getAllBoard(pageOptionsDto: PageOptionsDto, id: number):Promise<PaginationResponseDto<Board>>{
+
+    const user = await this.userRepository.findOne({where: {id: id}, relations: ['region']});
+    const userRegionId = user.region.id;
+
+    const [boards, totalCount] = await this.boardRepository
       .createQueryBuilder('board')
-      .leftJoin('board.creator', 'user')
-      .leftJoin('user.province', 'province')
-      .leftJoin('user.city', 'city')
-      .select([
-        'board.id',
-        'board.stuffName',
-        'board.stuffContent',
-        'board.stuffPrice',
-        'board.stuffCategory',
-        'board.imageUrl',
-        'board.createAt',
-        'user.id',
-        'province.name',
-        'city.name',
-      ])
-      .where('board.deleteAt IS NULL');
+      .select(['board.id', 'board.stuffName', 'board.status', 'board.imageUrl', 'board.createAt', 'board.deleteAt'])
+      .where('board.region_id = :userRegionId', { userRegionId })
+      .andWhere('board.deleteAt IS NULL')
+      .orderBy('board.id', 'DESC')
+      .limit(pageOptionsDto.take)
+      .offset(pageOptionsDto.skip)
+      .getManyAndCount();
 
-    if (titleSearch) {
-      query.andWhere('board.stuffName LIKE :search', {
-        search: `${titleSearch}%`,
-      });
+    const pageMetaDto = new PageMetaDto({pageOptionsDto, totalCount});
+    const lastPage = pageMetaDto.totalPage;
+
+    if(pageOptionsDto.page<=lastPage){
+      return new PaginationResponseDto(boards, pageMetaDto);
+    }else{
+      throw new PageNotExists();
     }
-
-    if (provinceName) {
-      query.andWhere('province.name = :provinceName', { provinceName });
-    }
-
-    if (cityName) {
-      query.andWhere('city.name = :cityName', { cityName });
-    }
-
-    if (stuffCategory) {
-      query.andWhere('board.stuffCategory = :stuffCategory', { stuffCategory });
-    }
-
-    query
-      .orderBy('board.createAt', 'DESC')
-      .addOrderBy('board.id', 'ASC')
-      .offset(offset)
-      .limit(limit);
-
-    const [boards, totalBoards] = await query.getManyAndCount();
-    const totalPages = Math.ceil(totalBoards / limit);
-
-    return {
-      boards,
-      totalPages,
-    };
+    
   }
 
   async updateBoardLikes(boardId: number, userId: number): Promise<{board: Board; isUserChecked: Boolean}>{
