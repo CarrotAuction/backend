@@ -1,5 +1,5 @@
 import { City } from "../../region/entity/city.entity";
-import { BaseEntity } from "../../../global/common/base.entitiy";
+import { BaseEntity } from "../../../global/common/entity/base.entitiy";
 import { Column, Entity, JoinColumn, ManyToOne} from "typeorm";
 import { Province } from "../../region/entity/province.entity";
 import { Region } from "../../region/entity/region.entity";
