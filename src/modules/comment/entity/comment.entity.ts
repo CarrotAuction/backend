@@ -1,19 +1,13 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-import { BaseEntity } from "../../../global/common/base.entitiy";
+import { BaseEntity } from "../../../global/common/entity/base.entitiy";
 import { Board } from "../../board/entity/board.entity";
 import { User } from "../../user/entity/user.entity";
 
 @Entity()
 export class Comment extends BaseEntity {
 
-    @PrimaryGeneratedColumn()
-    id: number;
-
     @Column()
-    price: number;
-
-    @Column()
-    openChatUrl: string;
+    content: string;
 
     @ManyToOne(type => Board, board => board.comments)
     @JoinColumn({name: "board_id"})

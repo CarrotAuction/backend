@@ -2,13 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from '../user/entity/user.entity';
-import { NotFoundUserException } from '../user/userException/NotFoundUserException';
-import { NotFoundBoardException } from '../board/boardException/NotFoundBoardException';
 import { CommentMapper } from './mapper/comment.mapper';
 import { Comment } from './entity/comment.entity';
 import { Board } from '../board/entity/board.entity';
 import { CommentPaginationRequestDto } from './dto/commet-pagination-request.dto';
-import { CreateCommentRequestDto } from './dto/comment-create-request.dto';
+import { CreateCommentDto } from './dto/create-comment.dto';
+import { UserCreateResultInterface } from 'src/interfaces/user-create-result.interface';
 
 @Injectable()
 export class CommentService {
@@ -16,27 +15,25 @@ export class CommentService {
     constructor(
         @InjectRepository(Comment)
         private readonly commentRepository: Repository<Comment>,
-
         @InjectRepository(Board)
         private readonly boardRepository: Repository<Board>,
-
         @InjectRepository(User)
         private readonly userRepository: Repository<User>,
 
         private readonly commentMapper: CommentMapper
     ) {}
 
-    async createComment(createCommentRequestDto: CreateCommentRequestDto): Promise<Comment> {
-        const creator = await this.userRepository.findOne({where: {id: createCommentRequestDto.creatorId}});
-        if(!creator){
-            throw new NotFoundUserException();
-        }
-        const board = await this.boardRepository.findOne({where: {id: createCommentRequestDto.boardId}});
-        if(!board){
-            throw new NotFoundBoardException();
-        }
-        const newCommentEntity = this.commentMapper.dtoToEntity(createCommentRequestDto, creator, board);
-        return await this.commentRepository.save(newCommentEntity);
+    async createComment(createCommentDto: CreateCommentDto, id: number): Promise<UserCreateResultInterface> {
+        const creator = await this.userRepository.findOneBy({id});
+        const board = await this.boardRepository.findOneBy({id: createCommentDto.boardId});
+        const newCommentEntity = this.commentMapper.dtoToEntity(createCommentDto,creator,board);
+
+        const savedComment = await this.commentRepository.save(newCommentEntity);
+
+        return{
+            message: '새로운 댓글 생성',
+            userId: savedComment.creator.id
+        };
     }
 
     async getAllComment(commentPaginationRequestDto: CommentPaginationRequestDto): Promise<Comment[]> {

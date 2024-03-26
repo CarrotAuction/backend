@@ -1,11 +1,7 @@
 import { Inject, Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
-import { User } from "../../modules/user/entity/user.entity";
-import { Board } from "../../modules/board/entity/board.entity";
-import { Province } from "../../modules/location/entity/province.entity";
-import { City } from "../../modules/location/entity/city.entity";
-import { Comment } from "../../modules/comment/entity/comment.entity";
+import * as path from 'path';
 
 @Module({
     imports: [
@@ -19,7 +15,7 @@ import { Comment } from "../../modules/comment/entity/comment.entity";
                 username: configService.get('DB_USER'),
                 password: configService.get('DB_PASSWORD'),
                 database: configService.get('DB_NAME'),
-                entities: [User, Board, Province, City, Comment],
+                entities: [path.join(__dirname, '../../modules/*/entity/*.entity.{ts,js}')],
                 synchronize: true,
                 logging: true,
             }),

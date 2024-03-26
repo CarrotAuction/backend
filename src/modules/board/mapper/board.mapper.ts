@@ -1,27 +1,34 @@
 import { Injectable } from '@nestjs/common';
-import { CreateBoardRequestDto } from '../dto/board-create-request.dto';
+import { CreateBoardDto } from '../dto/create-board.dto';
 import { Board } from '../entity/board.entity';
 import { CreateBoardResponseDto } from '../dto/board-create-response.dto';
 import { User } from '../../user/entity/user.entity';
+import { Region } from '../../region/entity/region.entity';
 
 @Injectable()
 export class BoardMapper {
   DtoToEntity(
+    creator: User,
+    image: string,
+    region: Region,
     {
       stuffName,
       stuffContent,
       stuffPrice,
+      tradingPlace,
       stuffCategory,
-    }: CreateBoardRequestDto,
-    creator: User,
+    }: CreateBoardDto,
   ): Board {
     const board = new Board();
 
     board.stuffName = stuffName;
     board.stuffContent = stuffContent;
     board.stuffPrice = stuffPrice;
+    board.tradingPlace = tradingPlace;
     board.stuffCategory = stuffCategory;
-    board.creator = creator;
+    board.imageUrl = image;
+    board.creator= creator;
+    board.region = region;
 
     return board;
   }

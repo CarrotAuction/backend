@@ -2,56 +2,58 @@ import {
   Body,
   Controller,
   Get,
+  HttpCode,
   HttpStatus,
+  Logger,
   Param,
   Post,
   Query,
   Res,
   UploadedFile,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { Response } from 'express';
 import { BoardService } from './board.service';
-import { CreateBoardRequestDto } from './dto/board-create-request.dto';
+import { CreateBoardDto } from './dto/create-board.dto';
 import { ApiOperation, ApiTags } from '@nestjs/swagger';
-import { BoardMapper } from './mapper/board.mapper';
-import { BoardPaginationRequestDto } from './dto/board-pagination-request.dto';
 import { FileInterceptor } from '@nestjs/platform-express';
-
+import { UserJwtAuthGuard } from '../auth/guards/user-jwt.guard';
+import { UserId } from '../../decorators/user-id.decorator';
+import { UserCreateResultInterface } from '../../interfaces/user-create-result.interface';
+import { PageOptionsDto } from '../../global/common/dto/page-options.dto';
+import { PaginationResponseDto } from '../../global/common/dto/pagination-response.dto';
+import { Board } from './entity/board.entity';
 @ApiTags('board')
+@UseGuards(UserJwtAuthGuard)
 @Controller('boards')
 export class BoardController {
+  private readonly logger = new Logger('Board');
   constructor(
     private readonly boardService: BoardService,
-    private readonly boardMapper: BoardMapper,
   ) {}
 
-  @ApiOperation({ summary: '사용자는 게시글을 생성한다.' })
+  @HttpCode(201)
+  @ApiOperation({ summary: '게시물 생성 API', description: '사용자가 게시물을 생성한다.' })
   @Post()
   @UseInterceptors(FileInterceptor('image'))
   async createBoard(
-    @Body() createBoardReuqestDto: CreateBoardRequestDto,
+    @Body() createBoardDto: CreateBoardDto,
     @UploadedFile() image: Express.Multer.File,
-    @Res() res: Response,
-  ): Promise<void> {
-    const newBoard = await this.boardService.createBoard(
-      createBoardReuqestDto,
-      image,
-    );
-    const response = this.boardMapper.EntityToDto(newBoard);
-    res.status(HttpStatus.CREATED).json(response);
+    @UserId() id: number,
+  ): Promise<UserCreateResultInterface> {
+    this.logger.verbose(`1.[사용자 ${id}가 게시물 생성] 2.[Dto: ${JSON.stringify(createBoardDto)}]`);
+    return await this.boardService.createBoard(createBoardDto, id, image);
   }
 
-  @ApiOperation({ summary: '사용자는 전체 게시글을 조회한다.' })
+  @ApiOperation({ summary: '게시물 전체 조회 API', description: '사용자는 본인이 거주하는 동/면/리의 전체 게시글을 최신순으로 조회할 수 있다.'})
   @Get()
   async getAllBoard(
-    @Query() boardPaginationRequestDto: BoardPaginationRequestDto,
-    @Res() res: Response,
-  ): Promise<void> {
-    const response = await this.boardService.getAllBoard(
-      boardPaginationRequestDto,
-    );
-    res.status(HttpStatus.OK).json(response);
+    @Query() pageOptionsDto: PageOptionsDto,
+    @UserId() id: number,
+  ): Promise<PaginationResponseDto<Board>> {
+    this.logger.verbose(`사용자 ${id} 게시물 조회`);
+    return await this.boardService.getAllBoard(pageOptionsDto, id);
   }
 
   @ApiOperation({ summary: '사용자는 상세 게시글을 조회한다.' })

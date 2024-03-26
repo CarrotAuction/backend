@@ -1,27 +1,34 @@
 import { User } from '../../user/entity/user.entity';
-import { BaseEntity } from '../../../global/common/base.entitiy';
-import { StuffCategory } from '../enums/stuffCategory.enum';
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, VersionColumn } from 'typeorm';
+import { BaseEntity } from '../../../global/common/entity/base.entitiy';
+import { Column, Entity, Index, JoinColumn, ManyToOne, OneToMany, PrimaryGeneratedColumn, VersionColumn } from 'typeorm';
 import { Comment } from '../../comment/entity/comment.entity';
+import { StuffCategory } from '../../../types/enums/stuffCategory.enum';
+import { BoardStatus } from '../../../types/enums/boardStatus.enum';
+import { Region } from '../../region/entity/region.entity';
 
+@Index('board_idx', ['regionId', 'deleteAt', 'id', 'createAt', 'stuffName', 'status', 'imageUrl'])
 @Entity()
 export class Board extends BaseEntity {
-  @PrimaryGeneratedColumn()
-  id: number;
 
   @Column()
-  stuffName: string;
+  stuffName!: string;
 
   @Column()
-  stuffContent: string;
+  stuffContent!: string;
 
   @Column()
-  stuffPrice: number;
+  stuffPrice!: number;
 
-  @Column({ type: 'enum', enum: StuffCategory })
+  @Column()
+  tradingPlace!: string;
+
+  @Column({ name: 'stuffCategory', type: 'varchar', length: 128 })
   stuffCategory: StuffCategory;
 
-  @Column({default: 0})
+  @Column({ name: 'status', type: 'varchar', length: 128, default: BoardStatus.OPEN })
+  status: keyof typeof BoardStatus;
+
+  @Column({ default: 0 })
   likesCount: number;
 
   @Column({ nullable: true })
@@ -31,6 +38,13 @@ export class Board extends BaseEntity {
   @JoinColumn({ name: 'user_id' })
   creator: User;
 
+  @ManyToOne((type) => Region)
+  @JoinColumn({name: 'region_id' })
+  region: Region;
+
   @OneToMany((type) => Comment, (comment) => comment.board)
   comments: Comment[];
+
+  @Column({ type: 'int', name: 'region_id', nullable: true })
+  regionId: number;
 }
